@@ -42,3 +42,16 @@ spec:
             requests:
               memory: 1G
               cpu: 1000m
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: employee
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: employee
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
