@@ -2,7 +2,6 @@
   "annotations": {
     "list": [
       {
-        "$$hashKey": "object:58",
         "builtIn": 1,
         "datasource": "-- Grafana --",
         "enable": true,
@@ -16,7 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 1,
+  "id": 2,
   "links": [],
   "panels": [
     {
@@ -56,7 +55,6 @@
       "renderer": "flot",
       "seriesOverrides": [
         {
-          "$$hashKey": "object:137",
           "alias": "application_org_k8s_poc_resource_EmployeeResource_checksGetEmployees_mean_seconds"
         }
       ],
@@ -75,7 +73,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Panel Title",
+      "title": "Mean time to response requests",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -91,7 +89,6 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:109",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -100,7 +97,6 @@
           "show": true
         },
         {
-          "$$hashKey": "object:110",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -163,7 +159,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Panel Title",
+      "title": "Total requests count",
       "type": "stat"
     },
     {
@@ -188,10 +184,6 @@
                 {
                   "color": "green",
                   "value": null
-                },
-                {
-                  "color": "red",
-                  "value": 80
                 }
               ]
             },
@@ -202,7 +194,7 @@
         },
         "orientation": "auto",
         "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "showThresholdMarkers": false
       },
       "pluginVersion": "6.7.2",
       "targets": [
@@ -215,7 +207,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Panel Title",
+      "title": "Memory",
       "type": "gauge"
     },
     {
@@ -269,7 +261,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Panel Title",
+      "title": "Up",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -285,7 +277,6 @@
       },
       "yaxes": [
         {
-          "$$hashKey": "object:403",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -294,7 +285,6 @@
           "show": true
         },
         {
-          "$$hashKey": "object:404",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -330,10 +320,6 @@
                 {
                   "color": "green",
                   "value": null
-                },
-                {
-                  "color": "red",
-                  "value": 80
                 }
               ]
             }
@@ -343,7 +329,7 @@
         },
         "orientation": "auto",
         "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "showThresholdMarkers": false
       },
       "pluginVersion": "6.7.2",
       "targets": [
@@ -356,7 +342,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Panel Title",
+      "title": "Threads",
       "type": "gauge"
     }
   ],
@@ -391,5 +377,5 @@
   "variables": {
     "list": []
   },
-  "version": 15
+  "version": 7
 }
