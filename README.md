@@ -30,12 +30,17 @@ kubectl apply -f k8s/
 
 Expose the application with:
 ```
-kubectl port-forward <employee_pod_name> 8080:8080
+kubectl port-forward <employee_pod_name> 8080
 ```
 
 Expose the prometheus' dashboard with:
 ```
-kubectl port-forward <prometheus_pod_name> 9090:9090
+kubectl port-forward <prometheus_pod_name> 9090
+```
+
+Expose the grafana's dashboard with:
+```
+kubectl port-forward <grafana_pod_name> 3000
 ```
 
 ## Endpoints
@@ -132,7 +137,9 @@ components:
       type: object
 ```
 
-Access to prometheus dashboard with: [localhost:9090](http:/localhost:9090)
+Access to prometheus' dashboard with: [localhost:9090](http:/localhost:9090)
+
+Access to grafana's dashboard with: [localhost:3000](http:/localhost:3000)
 
 ## Author
 
