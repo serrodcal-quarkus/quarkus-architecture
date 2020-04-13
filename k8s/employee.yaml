@@ -27,7 +27,8 @@ spec:
     spec:
       containers:
         - name: employee
-          image: serrodcal/employees-quarkus-prometheus:1.0.0
+          #image: serrodcal/employees-quarkus-prometheus:1.0.0
+          image: serrodcal/employees-quarkus-prometheus-jvm:1.0.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
