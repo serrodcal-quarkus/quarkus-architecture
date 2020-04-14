@@ -350,19 +350,19 @@ data:
               "refId": "B"
             },
             {
-              "expr": "application_org_k8s_poc_resource_EmployeeResource_checksCreateEmployees_mean_seconds",
+              "expr": "application_org_k8s_poc_resource_EmployeeResource_checksCreateEmployee_mean_seconds",
               "interval": "",
               "legendFormat": "",
               "refId": "C"
             },
             {
-              "expr": "application_org_k8s_poc_resource_EmployeeResource_checksUpdateEmployees_mean_seconds",
+              "expr": "application_org_k8s_poc_resource_EmployeeResource_checksUpdateEmployee_mean_seconds",
               "interval": "",
               "legendFormat": "",
               "refId": "D"
             },
             {
-              "expr": "application_org_k8s_poc_resource_EmployeeResource_checksDeleteEmployees_mean_seconds",
+              "expr": "application_org_k8s_poc_resource_EmployeeResource_checksDeleteEmployee_mean_seconds",
               "interval": "",
               "legendFormat": "",
               "refId": "E"
@@ -420,7 +420,7 @@ data:
         "list": []
       },
       "time": {
-        "from": "now-6h",
+        "from": "now-5m",
         "to": "now"
       },
       "timepicker": {
@@ -465,7 +465,6 @@ data:
       "editable": true,
       "gnetId": 3308,
       "graphTooltip": 0,
-      "id": 2,
       "links": [],
       "panels": [
         {
@@ -531,7 +530,7 @@ data:
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "{{kubernetes_pod_name}}",
+              "legendFormat": "",
               "refId": "A",
               "step": 4
             }
@@ -625,7 +624,7 @@ data:
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "{{kubernetes_pod_name}}",
+              "legendFormat": "",
               "refId": "A",
               "step": 4
             }
@@ -719,7 +718,7 @@ data:
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "{{kubernetes_pod_name}}",
+              "legendFormat": "",
               "refId": "A",
               "step": 4
             }
@@ -1407,7 +1406,7 @@ data:
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "{{kubernetes_pod_name}}",
+              "legendFormat": "",
               "refId": "A",
               "step": 2
             }
@@ -1501,7 +1500,7 @@ data:
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "{{kubernetes_pod_name}}",
+              "legendFormat": "",
               "refId": "A",
               "step": 2
             }
@@ -1610,7 +1609,7 @@ data:
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "{{kubernetes_pod_name}}",
+              "legendFormat": "",
               "refId": "A",
               "step": 30
             }
@@ -1704,7 +1703,7 @@ data:
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "{{kubernetes_pod_name}}",
+              "legendFormat": "",
               "refId": "A",
               "step": 30
             }
@@ -1796,5 +1795,5 @@ data:
       "variables": {
         "list": []
       },
-      "version": 7
+      "version": 1
     }
