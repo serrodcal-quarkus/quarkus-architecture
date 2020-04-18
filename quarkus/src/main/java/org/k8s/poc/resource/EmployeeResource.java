@@ -19,7 +19,7 @@ import java.util.Objects;
 @Consumes(MediaType.APPLICATION_JSON)
 public class EmployeeResource {
 
-    private static final Logger LOG = Logger.getLogger(EmployeeResource.class);
+    private static final Logger logger = Logger.getLogger(EmployeeResource.class);
 
     private EmployeeService employeeService;
 
@@ -31,7 +31,7 @@ public class EmployeeResource {
     @Counted(name = "countGetEmployees", description = "Count number of served messages")
     @Timed(name = "checksGetEmployees", description = "A measure of how much time takes to serve employees", unit = MetricUnits.MILLISECONDS)
     public Multi<Employee> getEmployees() {
-        LOG.info("getEmployees");
+        logger.info("getEmployees");
         return employeeService.getEmployees();
     }
 
@@ -40,7 +40,7 @@ public class EmployeeResource {
     @Counted(name = "countGetEmployee", description = "Count number of served messages")
     @Timed(name = "checksGetEmployee", description = "A measure of how much time takes to serve a employee", unit = MetricUnits.MILLISECONDS)
     public Uni<Employee> getEmployee(@PathParam("id") Long id) {
-        LOG.info("getEmployee");
+        logger.info("getEmployee with [id:" + id.toString() + "]");
         return employeeService.getEmployee(id);
     }
 
@@ -48,13 +48,13 @@ public class EmployeeResource {
     @Counted(name = "countCreateEmployee", description = "Count number of served messages")
     @Timed(name = "checksCreateEmployee", description = "A measure of how much time takes to create a employee", unit = MetricUnits.MILLISECONDS)
     public Uni<Response> createEmployee(Employee employee) {
-        LOG.info("createEmployee");
+        logger.info("createEmployee with [name:" + employee.name + "]");
         return employeeService.createEmployee(employee)
                 .map(id -> {
                     if (Objects.nonNull(id)) {
                         return Response.Status.OK;
                     } else {
-                        LOG.error("Some error saving employee " + String.valueOf(id));
+                        logger.error("Some error saving employee with [id:" + String.valueOf(id) + "]");
                         return Response.Status.ACCEPTED;
                     }
                 })
@@ -65,13 +65,13 @@ public class EmployeeResource {
     @Counted(name = "countUpdateEmployee", description = "Count number of served messages")
     @Timed(name = "checksUpdateEmployee", description = "A measure of how much time takes to update a employee", unit = MetricUnits.MILLISECONDS)
     public Uni<Response> updateEmployee(Employee employee) {
-        LOG.info("updateEmployee");
+        logger.info("updateEmployee with [name:" + employee.name + "]");
         return employeeService.updateEmployee(employee)
                 .map(updated -> {
                     if (updated) {
                         return Response.Status.OK;
                     } else {
-                        LOG.error("Some error updating employee " + String.valueOf(employee.id));
+                        logger.error("Some error updating employee  with [id:" + String.valueOf(employee.id) + "]");
                         return Response.Status.ACCEPTED;
                     }
                 })
@@ -83,13 +83,13 @@ public class EmployeeResource {
     @Counted(name = "countDeleteEmployee", description = "Count number of served messages")
     @Timed(name = "checksDeleteEmployee", description = "A measure of how much time takes to delete a employee", unit = MetricUnits.MILLISECONDS)
     public Uni<Response> deleteEmployee(@PathParam("id") Long id) {
-        LOG.info("deleteEmployee");
+        logger.info("deleteEmployee wit [id:" + id.toString() + "]");
         return employeeService.deleteEmployee(id)
                 .map(deleted -> {
                     if (deleted) {
                         return Response.Status.OK;
                     } else {
-                        LOG.error("Some error deleting employee " + String.valueOf(id));
+                        logger.error("Some error deleting employee  with [id:" + String.valueOf(id) + "]");
                         return Response.Status.ACCEPTED;
                     }
                 })
