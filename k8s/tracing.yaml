@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jaeger
+spec:
+  ports:
+    - name: http-1
+      port: 5775
+      targetPort: 5775
+      protocol: UDP
+    - name: http-2
+      port: 6831
+      targetPort: 6831
+      protocol: UDP
+    - name: http-3
+      port: 6832
+      targetPort: 6832
+      protocol: UDP
+    - name: http-4
+      port: 5778
+      targetPort: 5778
+      protocol: TCP
+    - name: http-dashboard
+      port: 16686
+      targetPort: 16686
+      protocol: TCP
+    - name: http-traces
+      port: 14268
+      targetPort: 14268
+      protocol: TCP
+  selector:
+    app: jaeger
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jaeger
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jaeger
+  template:
+    metadata:
+      labels:
+        app: jaeger
+    spec:
+      containers:
+        - name: jaeger
+          image: jaegertracing/all-in-one:1.17.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5775
+              protocol: UDP
+            - containerPort: 6831
+              protocol: UDP
+            - containerPort: 6832
+              protocol: UDP
+            - containerPort: 5778
+              protocol: TCP
+            - containerPort: 16686
+              protocol: TCP
+            - containerPort: 14268
+              protocol: TCP
+          resources:
+            limits:
+              memory: 1G
+              cpu: 1000m
+            requests:
+              memory: 1G
+              cpu: 1000m

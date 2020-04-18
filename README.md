@@ -49,6 +49,11 @@ Expose the kibana's dashboard with:
 kubectl port-forward <kibana_pod_name> 5601
 ```
 
+Expose the jaeger's dashboard with:
+```
+kubectl port-forward <jaeger_pod_name> 16686
+```
+
 ## Endpoints
 
 Swagger file is given below:
@@ -149,6 +154,8 @@ Access to grafana's dashboard with: [localhost:3000](http:/localhost:3000)
 
 Access to kibana's dashboard with: [localhost:5601](http://localhost:5601)
 
+Access to jaeger's dashboard with: [localhost:16686](http://localhost:16686)
+
 ## Load images to avoid errors
 
 The first time all the services are deployed in Kubernetes, the nodes has to
@@ -158,10 +165,11 @@ cause some error at the first time. Try to load all the images to the nodes with
 kind load docker-image docker.elastic.co/elasticsearch/elasticsearch-oss:6.8.2 && \
 kind load docker-image docker.elastic.co/logstash/logstash-oss:6.8.2 && \
 kind load docker-image docker.elastic.co/kibana/kibana-oss:6.8.2 && \
-kind load docker-image serrodcal/employees-quarkus-prometheus-jvm:1.0.1 && \
+kind load docker-image serrodcal/employees-quarkus-prometheus-jvm:1.0.2 && \
 kind load docker-image postgres:10.5 && \
 kind load docker-image prom/prometheus:v2.17.1 && \
-kind load docker-image grafana/grafana:6.7.2
+kind load docker-image grafana/grafana:6.7.2 && \
+kind load docker-image jaegertracing/all-in-one:1.17.1
 ```
 
 ## Author
