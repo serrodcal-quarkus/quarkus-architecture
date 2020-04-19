@@ -23,10 +23,20 @@ kind create cluster --config kind/kind-ha-config.yaml
 If you want to use Istio follow below instructions:
 ```
 istioctl manifest apply --set profile=demo
+```
+
+Auto sidecar injection with:
+```
 kubectl label ns default istio-injection=enabled
 ```
 
 **Note**: `istio-injection=enabled` label enable the automatic sidecar injection.
+Remove label with: `kubectl label ns default istio-injection-`
+
+Or, manual sidecar injection with:
+```
+cat k8s/<file>.yaml | istioctl kube-inject -f - | kubectl apply -f -
+```
 
 ### Clean up Istio
 
