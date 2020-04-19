@@ -30,7 +30,10 @@ kubectl label ns default istio-injection=enabled
 
 ### Clean up Istio
 
-
+Remove all Istio components with:
+```
+istioctl manifest generate --set profile=demo | kubectl delete -f -
+```
 
 ## Deploying application
 
