@@ -20,6 +20,18 @@ Create a Kubernetes local cluster with:
 kind create cluster --config kind/kind-ha-config.yaml
 ```
 
+If you want to use Istio follow below instructions:
+```
+istioctl manifest apply --set profile=demo
+kubectl label ns default istio-injection=enabled
+```
+
+**Note**: `istio-injection=enabled` label enable the automatic sidecar injection.
+
+### Clean up Istio
+
+
+
 ## Deploying application
 
 Deploy the application with:
@@ -52,6 +64,11 @@ kubectl port-forward <kibana_pod_name> 5601
 Expose the jaeger's dashboard with:
 ```
 kubectl port-forward <jaeger_pod_name> 16686
+```
+
+Access to kiali's Dashboard (`admin;admin`) provided by Istio:
+```
+istioctl dashboard kiali
 ```
 
 ## Endpoints

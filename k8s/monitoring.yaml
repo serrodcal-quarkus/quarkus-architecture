@@ -116,18 +116,29 @@ spec:
       volumes:
       - name: grafana-datasource-provider
         configMap:
-          name: prometheus-grafana-datasource
+          name: grafana-cm
+          items:
+            - key: prometheus.yaml
+              path: prometheus.yaml
       - name: grafana-dashboard-provider
         configMap:
-          name: prometheus-grafana-dashboard
+          name: grafana-cm
+          items:
+            - key: dashboard.yaml
+              path: dashboard.yaml
       - name: employee-json-dashboard
         configMap:
-          name: employee-grafana-dashboard
+          name: grafana-cm
+          items:
+            - key: employee.json
+              path: employee.json
+            - key: jvm.json
+              path: jvm.json
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: prometheus-grafana-datasource
+  name: grafana-cm
 data:
   prometheus.yaml: |-
     apiVersion: 1
@@ -137,12 +148,6 @@ data:
       access: proxy
       orgId: 1
       url: http://prometheus:9090
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: prometheus-grafana-dashboard
-data:
   dashboard.yaml: |-
     apiVersion: 1
     providers:
@@ -155,13 +160,6 @@ data:
       updateIntervalSeconds: 5
       options:
         path: /var/lib/grafana/dashboards
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: employee-grafana-dashboard
-apiVersion: v1
-data:
   employee.json: |
     {
       "annotations": {
