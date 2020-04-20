@@ -24,6 +24,9 @@ spec:
     metadata:
       labels:
         app: employee
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
     spec:
       containers:
         - name: employee
