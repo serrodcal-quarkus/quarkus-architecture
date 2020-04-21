@@ -24,9 +24,9 @@ spec:
       port: 16686
       targetPort: 16686
       protocol: TCP
-    - name: http-traces
+    - name: http-metrics
       port: 14268
-      targetPort: 14268
+      targetPort: 14269
       protocol: TCP
   selector:
     app: jaeger
@@ -44,6 +44,11 @@ spec:
     metadata:
       labels:
         app: jaeger
+      annotations:
+        prometheus.io/should_be_scraped: "true"
+        prometheus.io/metric_path: "/metrics"
+        prometheus.io/scrape_port: "14269"
+        prometheus.io/scrape_scheme: "http"
     spec:
       containers:
         - name: jaeger
@@ -60,7 +65,7 @@ spec:
               protocol: TCP
             - containerPort: 16686
               protocol: TCP
-            - containerPort: 14268
+            - containerPort: 14269
               protocol: TCP
           resources:
             limits:

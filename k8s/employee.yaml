@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: employee
   annotations:
-    example.io/should_be_scraped: "true"
+    prometheus.io/should_be_scraped: "true"
 spec:
   ports:
     - name: http
@@ -27,10 +27,10 @@ spec:
       labels:
         app: employee
       annotations:
-        example.io/should_be_scraped: "true"
-        example.io/metric_path: "/metrics"
-        example.io/scrape_port: "8080"
-        example.io/scrape_scheme: "http"
+        prometheus.io/should_be_scraped: "true"
+        prometheus.io/metric_path: "/metrics"
+        prometheus.io/scrape_port: "8080"
+        prometheus.io/scrape_scheme: "http"
     spec:
       containers:
         - name: employee

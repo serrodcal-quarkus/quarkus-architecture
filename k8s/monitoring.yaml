@@ -167,19 +167,19 @@ data:
         - role: endpoints
 
         relabel_configs:
-          - source_labels: [__meta_kubernetes_service_annotation_example_io_should_be_scraped]
+          - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_should_be_scraped]
             action: keep
             regex: true
-          - source_labels: [__meta_kubernetes_service_annotation_example_io_metric_path]
+          - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_metric_path]
             action: replace
             target_label: __metrics_path__
             regex: (.+)
-          - source_labels: [__address__, __meta_kubernetes_service_annotation_example_io_scrape_port]
+          - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_scrape_port]
             action: replace
             regex: ([^:]+)(?::\d+)?;(\d+)
             replacement: $1:$2
             target_label: __address__
-          - source_labels: [__meta_kubernetes_service_annotation_example_io_scrape_scheme]
+          - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape_scheme]
             action: replace
             target_label: __scheme__
             regex: (https?)
@@ -202,7 +202,7 @@ data:
           - role: service
 
         relabel_configs:
-          - source_labels: [__meta_kubernetes_service_annotation_example_io_should_be_probed]
+          - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_should_be_probed]
             action: keep
             regex: true
           - source_labels: [__address__]
@@ -228,7 +228,7 @@ data:
         - role: ingress
 
         relabel_configs:
-          - source_labels: [__meta_kubernetes_ingress_annotation_example_io_should_be_probed]
+          - source_labels: [__meta_kubernetes_ingress_annotation_prometheus_io_should_be_probed]
             action: keep
             regex: true
           - source_labels: [__meta_kubernetes_ingress_scheme,__address__,__meta_kubernetes_ingress_path]
@@ -252,14 +252,14 @@ data:
         - role: pod
 
         relabel_configs:
-          - source_labels: [__meta_kubernetes_pod_annotation_example_io_should_be_scraped]
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_should_be_scraped]
             action: keep
             regex: true
-          - source_labels: [__meta_kubernetes_pod_annotation_example_io_metric_path]
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_metric_path]
             action: replace
             target_label: __metrics_path__
             regex: (.+)
-          - source_labels: [__address__, __meta_kubernetes_pod_annotation_example_io_scrape_port]
+          - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_scrape_port]
             action: replace
             regex: ([^:]+)(?::\d+)?;(\d+)
             replacement: $1:$2
@@ -344,6 +344,8 @@ spec:
               path: jvm.json
             - key: k8s.json
               path: k8s.json
+            - key: jaeger.json
+              path: jaeger.json
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -4419,6 +4421,2585 @@ data:
       "timezone": "browser",
       "title": "Kubernetes cluster monitoring (via Prometheus)",
       "uid": "jC8g-03Zk",
+      "variables": {
+        "list": []
+      },
+      "version": 1
+    }
+  jaeger.json: |
+    {
+      "annotations": {
+        "list": [
+          {
+            "builtIn": 1,
+            "datasource": "-- Grafana --",
+            "enable": true,
+            "hide": true,
+            "iconColor": "rgba(0, 211, 255, 1)",
+            "name": "Annotations & Alerts",
+            "type": "dashboard"
+          }
+        ]
+      },
+      "description": "Dashboard for monitoring jaeger running in a k8s environment. Works with 1.9+. Feedbacks? Please send to luong.vo@employmenthero.com",
+      "editable": true,
+      "gnetId": 10001,
+      "graphTooltip": 0,
+      "id": 5,
+      "links": [],
+      "panels": [
+        {
+          "collapsed": false,
+          "datasource": null,
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 0
+          },
+          "id": 32,
+          "panels": [],
+          "title": "Jaeger Collector",
+          "type": "row"
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 0,
+            "y": 1
+          },
+          "hiddenSeries": false,
+          "id": 34,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "paceLength": 10,
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(rate(jaeger_spans_received_total[5m]))",
+              "format": "time_series",
+              "hide": false,
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Spans Received/sec",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 8,
+            "y": 1
+          },
+          "hiddenSeries": false,
+          "id": 36,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "paceLength": 10,
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "jaeger_in_queue_latency_sum / jaeger_in_queue_latency_count",
+              "format": "time_series",
+              "hide": false,
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Average in-queue latency (sec)",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 16,
+            "y": 1
+          },
+          "hiddenSeries": false,
+          "id": 42,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "paceLength": 10,
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "jaeger_batch_size",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Batch Size (spans)",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 0,
+            "y": 8
+          },
+          "hiddenSeries": false,
+          "id": 38,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "paceLength": 10,
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "jaeger_queue_length",
+              "format": "time_series",
+              "hide": false,
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Queue Length (Spans)",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 8,
+            "y": 8
+          },
+          "hiddenSeries": false,
+          "id": 40,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "paceLength": 10,
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "rate(jaeger_spans_dropped_total[5m])",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Spans Dropped/sec",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 16,
+            "y": 8
+          },
+          "hiddenSeries": false,
+          "id": 44,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "paceLength": 10,
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "jaeger_save_latency_sum / jaeger_save_latency_count",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Span save latency (sec)",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "collapsed": false,
+          "datasource": null,
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 15
+          },
+          "id": 30,
+          "panels": [],
+          "repeat": null,
+          "title": "Jaeger Agent",
+          "type": "row"
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 0,
+            "y": 16
+          },
+          "hiddenSeries": false,
+          "id": 8,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "paceLength": 10,
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(rate(jaeger_thrift_udp_server_packets_processed_total[5m])) by (protocol)",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "{{ protocol }}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "jaeger_agent_thrift_udp_server_packets_processed/sec",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 8,
+            "y": 16
+          },
+          "hiddenSeries": false,
+          "id": 20,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "paceLength": 10,
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "avg(jaeger_thrift_udp_server_packet_size) by (protocol)",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "{{ protocol }}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "avg(jaeger_agent_thrift_udp_server_packet_size)",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 16,
+            "y": 16
+          },
+          "hiddenSeries": false,
+          "id": 24,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "paceLength": 10,
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "avg(jaeger_thrift_udp_server_queue_size) by (protocol)",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "{{ protocol }}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "jaeger_agent_thrift_udp_server_queue_size",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 0,
+            "y": 22
+          },
+          "hiddenSeries": false,
+          "id": 26,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "paceLength": 10,
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(rate(jaeger_thrift_udp_server_read_errors_total[5m])) by (protocol)",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "{{ protocol }}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "jaeger_agent_thrift_udp_server_read_errors/sec",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 8,
+            "y": 22
+          },
+          "hiddenSeries": false,
+          "id": 22,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "paceLength": 10,
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(rate(jaeger_thrift_udp_server_packets_dropped_total[5m])) by (protocol)",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "{{ protocol }}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "jaeger_agent_thrift_udp_server_packets_dropped/sec",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 16,
+            "y": 22
+          },
+          "hiddenSeries": false,
+          "id": 28,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "paceLength": 10,
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(rate(jaeger_thrift_udp_t_processor_handler_errors_total[5m])) by (protocol)",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "{{ protocol }}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "jaeger_agent_thrift_udp_t_processor_handler_errors/sec",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 0,
+            "y": 28
+          },
+          "hiddenSeries": false,
+          "id": 6,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "paceLength": 10,
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(rate(jaeger_agent_reporter_batches_submitted_total[5m])) by (format)",
+              "format": "time_series",
+              "hide": false,
+              "intervalFactor": 1,
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "jaeger_agent_tchannel_reporter_batches_submitted/sec",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 8,
+            "y": 28
+          },
+          "hiddenSeries": false,
+          "id": 16,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "paceLength": 10,
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(rate(jaeger_agent_reporter_spans_submitted_total[5m])) by (format)",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "jaeger_agent_tchannel_reporter_spans_submitted/sec",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 16,
+            "y": 28
+          },
+          "hiddenSeries": false,
+          "id": 12,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "paceLength": 10,
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "avg(jaeger_agent_reporter_batch_size) by (format)",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "avg(jaeger_agent_tchannel_reporter_batch_size)",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 0,
+            "y": 34
+          },
+          "hiddenSeries": false,
+          "id": 4,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "paceLength": 10,
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(rate(jaeger_http_server_requests_total[5m])) by (type)",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "{{ type }}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "jaeger_agent_http_server_requests/sec",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 8,
+            "y": 34
+          },
+          "hiddenSeries": false,
+          "id": 14,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "paceLength": 10,
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(rate(jaeger_agent_reporter_batches_failures_total[5m])) by (format)",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "jaeger_agent_tchannel_reporter_batches_failures/sec",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 16,
+            "y": 34
+          },
+          "hiddenSeries": false,
+          "id": 18,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "paceLength": 10,
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(rate(jaeger_agent_reporter_spans_failures_total[5m])) by (format)",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "jaeger_agent_tchannel_reporter_spans_failures/sec",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 8,
+            "x": 0,
+            "y": 40
+          },
+          "hiddenSeries": false,
+          "id": 2,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "paceLength": 10,
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(rate(jaeger_http_server_errors_total[5m])) by (source, status)",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "{{source}}.{{status}}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "jaeger_agent_http_server_errors/sec",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 6,
+            "w": 16,
+            "x": 8,
+            "y": 40
+          },
+          "hiddenSeries": false,
+          "id": 10,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "paceLength": 10,
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(jaeger_agent_collector_proxy_total) by (endpoint,protocol,result)",
+              "format": "time_series",
+              "intervalFactor": 1,
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "total(jaeger_agent_collector_proxy)",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "collapsed": false,
+          "datasource": null,
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 46
+          },
+          "id": 46,
+          "panels": [],
+          "title": "Jaeger Query",
+          "type": "row"
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 7,
+            "w": 24,
+            "x": 0,
+            "y": 47
+          },
+          "hiddenSeries": false,
+          "id": 48,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "hideEmpty": true,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "paceLength": 10,
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "(jaeger_save_latency_sum / jaeger_save_latency_count)*1000",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Average request latency (milliseconds)",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 0,
+            "y": 54
+          },
+          "hiddenSeries": false,
+          "id": 50,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "paceLength": 10,
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": " sum(rate(jaeger_http_server_requests_total[5m]))*60",
+              "format": "time_series",
+              "hide": false,
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "All requests (/min)",
+              "refId": "A"
+            },
+            {
+              "expr": "sum(rate(jaeger_http_server_requests_total{status_code=~\"2xx\"}[5m]))*60",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "2xx Requests (/min)",
+              "refId": "B"
+            },
+            {
+              "expr": "sum(rate(jaeger_http_server_requests_total{status_code!=\"2xx\"}[5m]))*60",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "Non-2xx Requests (/min)",
+              "refId": "C"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Requests/min (All requests)",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 8,
+            "y": 54
+          },
+          "hiddenSeries": false,
+          "id": 52,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "paceLength": 10,
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(rate(jaeger_rpc_requests_total{endpoint=~\"/api/traces\"}[5m]))*60",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "All requests (/min)",
+              "refId": "A"
+            },
+            {
+              "expr": "sum(rate(jaeger_rpc_requests_total{endpoint=~\"/api/traces\",status_code=~\"2xx\"}[5m]))*60",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "2xx Requests (/min)",
+              "refId": "B"
+            },
+            {
+              "expr": "sum(rate(jaeger_rpc_requests_total{endpoint=~\"/api/traces\",status_code!=\"2xx\"}[5m]))*60",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "Non-2xx Requests (/min)",
+              "refId": "C"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Requests/min (endpoint=\"/api/traces\")",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 16,
+            "y": 54
+          },
+          "hiddenSeries": false,
+          "id": 54,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "paceLength": 10,
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(rate(jaeger_http_server_requests_total{endpoint=~\"/api/traces/-traceID-\"}[5m]))*60",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "All requests (/min)",
+              "refId": "A"
+            },
+            {
+              "expr": "sum(rate(jaeger_http_server_requests_total{endpoint=~\"/api/traces/-traceID-\",status_code=~\"2xx\"}[5m]))*60",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "2xx Requests (/min)",
+              "refId": "B"
+            },
+            {
+              "expr": "sum(rate(jaeger_http_server_requests_total{endpoint=~\"/api/traces/-traceID-\",status_code!=\"2xx\"}[5m]))*60",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "Non-2xx Requests (/min)",
+              "refId": "C"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Requests/min (endpoint=\"/api/traces/-traceID-\")",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 61
+          },
+          "hiddenSeries": false,
+          "id": 56,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "paceLength": 10,
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(rate(jaeger_http_server_requests_total{endpoint=~\"/api/services/-service-/operations\"}[5m]))*60",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "All requests (/min)",
+              "refId": "A"
+            },
+            {
+              "expr": "sum(rate(jaeger_http_server_requests_total{endpoint=~\"/api/services/-service-/operations\",status_code=~\"2xx\"}[5m]))*60",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "2xx Requests (/min)",
+              "refId": "B"
+            },
+            {
+              "expr": "sum(rate(jaeger_http_server_requests_total{endpoint=~\"/api/services/-service-/operations\",status_code!=\"2xx\"}[5m]))*60",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "Non-2xx Requests (/min)",
+              "refId": "C"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Requests/min (endpoint=\"/api/services/-service-/operations\")",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 61
+          },
+          "hiddenSeries": false,
+          "id": 58,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "options": {
+            "dataLinks": []
+          },
+          "paceLength": 10,
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(rate(jaeger_http_server_requests_total{endpoint=~\"/api/services\"}[5m]))*60",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "All requests (/min)",
+              "refId": "A"
+            },
+            {
+              "expr": "sum(rate(jaeger_http_server_requests_total{endpoint=~\"/api/services\",status_code=~\"2xx\"}[5m]))*60",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "2xx Requests (/min)",
+              "refId": "B"
+            },
+            {
+              "expr": "sum(rate(jaeger_http_server_requests_total{endpoint=~\"/api/services\",status_code!=\"2xx\"}[5m]))*60",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "Non-2xx Requests (/min)",
+              "refId": "C"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Requests/min (endpoint=\"/api/services\")",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        }
+      ],
+      "refresh": "5s",
+      "schemaVersion": 22,
+      "style": "dark",
+      "tags": [
+        "jaeger"
+      ],
+      "templating": {
+        "list": []
+      },
+      "time": {
+        "from": "now-15m",
+        "to": "now"
+      },
+      "timepicker": {
+        "refresh_intervals": [
+          "5s",
+          "10s",
+          "30s",
+          "1m",
+          "5m",
+          "15m",
+          "30m",
+          "1h",
+          "2h",
+          "1d"
+        ],
+        "time_options": [
+          "5m",
+          "15m",
+          "1h",
+          "6h",
+          "12h",
+          "24h",
+          "2d",
+          "7d",
+          "30d"
+        ]
+      },
+      "timezone": "",
+      "title": "Jaeger",
+      "uid": "zLOi95xmk",
       "variables": {
         "list": []
       },
