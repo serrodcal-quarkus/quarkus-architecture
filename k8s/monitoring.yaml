@@ -4445,7 +4445,7 @@ data:
       "editable": true,
       "gnetId": 10001,
       "graphTooltip": 0,
-      "id": 5,
+      "id": 4,
       "links": [],
       "panels": [
         {
@@ -5075,7 +5075,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(rate(jaeger_thrift_udp_server_packets_processed_total[5m])) by (protocol)",
+              "expr": "sum(rate(jaeger_thrift_udp_server_packets_processed_total[5m]))by(protocol)",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 1,
@@ -5167,7 +5167,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "avg(jaeger_thrift_udp_server_packet_size) by (protocol)",
+              "expr": "avg(jaeger_thrift_udp_server_packet_size)by(protocol)",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 1,
@@ -5259,7 +5259,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "avg(jaeger_thrift_udp_server_queue_size) by (protocol)",
+              "expr": "avg(jaeger_thrift_udp_server_queue_size)by(protocol)",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 1,
@@ -5351,7 +5351,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(rate(jaeger_thrift_udp_server_read_errors_total[5m])) by (protocol)",
+              "expr": "sum(rate(jaeger_agent_thrift_udp_server_read_errors_total[5m]))by(protocol)",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 1,
@@ -5443,7 +5443,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(rate(jaeger_thrift_udp_server_packets_dropped_total[5m])) by (protocol)",
+              "expr": "sum(rate(jaeger_thrift_udp_server_packets_dropped_total[5m]))by(protocol)",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 1,
@@ -5535,7 +5535,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(rate(jaeger_thrift_udp_t_processor_handler_errors_total[5m])) by (protocol)",
+              "expr": "sum(rate(jaeger_thrift_udp_t_processor_handler_errors_total[5m]))by(protocol)",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 1,
@@ -5899,7 +5899,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(rate(jaeger_http_server_requests_total[5m])) by (type)",
+              "expr": "sum(rate(jaeger_http_server_requests_total[5m]))by(type)",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 1,
@@ -6171,7 +6171,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(rate(jaeger_http_server_errors_total[5m])) by (source, status)",
+              "expr": "sum(rate(jaeger_http_server_errors_total[5m]))by(source, status)",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 1,
@@ -6368,7 +6368,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "(jaeger_save_latency_sum / jaeger_save_latency_count)*1000",
+              "expr": "(jaeger_rpc_request_latency_sum / jaeger_rpc_request_latency_count)*1000",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 1,
@@ -6460,26 +6460,23 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": " sum(rate(jaeger_http_server_requests_total[5m]))*60",
+              "expr": "sum(rate(jaeger_rpc_http_requests_total[5m]))*60",
               "format": "time_series",
               "hide": false,
-              "interval": "",
               "intervalFactor": 1,
               "legendFormat": "All requests (/min)",
               "refId": "A"
             },
             {
-              "expr": "sum(rate(jaeger_http_server_requests_total{status_code=~\"2xx\"}[5m]))*60",
+              "expr": "sum(rate(jaeger_rpc_http_requests_total{status_code=~\"2xx\"}[5m]))*60",
               "format": "time_series",
-              "interval": "",
               "intervalFactor": 1,
               "legendFormat": "2xx Requests (/min)",
               "refId": "B"
             },
             {
-              "expr": "sum(rate(jaeger_http_server_requests_total{status_code!=\"2xx\"}[5m]))*60",
+              "expr": "sum(rate(jaeger_rpc_http_requests_total{status_code!=\"2xx\"}[5m]))*60",
               "format": "time_series",
-              "interval": "",
               "intervalFactor": 1,
               "legendFormat": "Non-2xx Requests (/min)",
               "refId": "C"
@@ -6569,25 +6566,22 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(rate(jaeger_rpc_requests_total{endpoint=~\"/api/traces\"}[5m]))*60",
+              "expr": "sum(rate(jaeger_rpc_http_requests_total{endpoint=~\"/api/traces\"}[5m]))*60",
               "format": "time_series",
-              "interval": "",
               "intervalFactor": 1,
               "legendFormat": "All requests (/min)",
               "refId": "A"
             },
             {
-              "expr": "sum(rate(jaeger_rpc_requests_total{endpoint=~\"/api/traces\",status_code=~\"2xx\"}[5m]))*60",
+              "expr": "sum(rate(jaeger_rpc_http_requests_total{endpoint=~\"/api/traces\",status_code=~\"2xx\"}[5m]))*60",
               "format": "time_series",
-              "interval": "",
               "intervalFactor": 1,
               "legendFormat": "2xx Requests (/min)",
               "refId": "B"
             },
             {
-              "expr": "sum(rate(jaeger_rpc_requests_total{endpoint=~\"/api/traces\",status_code!=\"2xx\"}[5m]))*60",
+              "expr": "sum(rate(jaeger_rpc_http_requests_total{endpoint=~\"/api/traces\",status_code!=\"2xx\"}[5m]))*60",
               "format": "time_series",
-              "interval": "",
               "intervalFactor": 1,
               "legendFormat": "Non-2xx Requests (/min)",
               "refId": "C"
@@ -6677,7 +6671,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(rate(jaeger_http_server_requests_total{endpoint=~\"/api/traces/-traceID-\"}[5m]))*60",
+              "expr": "sum(rate(jaeger_rpc_http_requests_total{endpoint=~\"/api/traces/-traceID-\"}[5m]))*60",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 1,
@@ -6685,17 +6679,15 @@ data:
               "refId": "A"
             },
             {
-              "expr": "sum(rate(jaeger_http_server_requests_total{endpoint=~\"/api/traces/-traceID-\",status_code=~\"2xx\"}[5m]))*60",
+              "expr": "sum(rate(jaeger_rpc_http_requests_total{endpoint=~\"/api/traces/-traceID-\",status_code=~\"2xx\"}[5m]))*60",
               "format": "time_series",
-              "interval": "",
               "intervalFactor": 1,
               "legendFormat": "2xx Requests (/min)",
               "refId": "B"
             },
             {
-              "expr": "sum(rate(jaeger_http_server_requests_total{endpoint=~\"/api/traces/-traceID-\",status_code!=\"2xx\"}[5m]))*60",
+              "expr": "sum(rate(jaeger_rpc_http_requests_total{endpoint=~\"/api/traces/-traceID-\",status_code!=\"2xx\"}[5m]))*60",
               "format": "time_series",
-              "interval": "",
               "intervalFactor": 1,
               "legendFormat": "Non-2xx Requests (/min)",
               "refId": "C"
@@ -6785,25 +6777,22 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(rate(jaeger_http_server_requests_total{endpoint=~\"/api/services/-service-/operations\"}[5m]))*60",
+              "expr": "sum(rate(jaeger_rpc_http_requests_total{endpoint=~\"/api/services/-service-/operations\"}[5m]))*60",
               "format": "time_series",
-              "interval": "",
               "intervalFactor": 1,
               "legendFormat": "All requests (/min)",
               "refId": "A"
             },
             {
-              "expr": "sum(rate(jaeger_http_server_requests_total{endpoint=~\"/api/services/-service-/operations\",status_code=~\"2xx\"}[5m]))*60",
+              "expr": "sum(rate(jaeger_rpc_http_requests_total{endpoint=~\"/api/services/-service-/operations\",status_code=~\"2xx\"}[5m]))*60",
               "format": "time_series",
-              "interval": "",
               "intervalFactor": 1,
               "legendFormat": "2xx Requests (/min)",
               "refId": "B"
             },
             {
-              "expr": "sum(rate(jaeger_http_server_requests_total{endpoint=~\"/api/services/-service-/operations\",status_code!=\"2xx\"}[5m]))*60",
+              "expr": "sum(rate(jaeger_rpc_http_requests_total{endpoint=~\"/api/services/-service-/operations\",status_code!=\"2xx\"}[5m]))*60",
               "format": "time_series",
-              "interval": "",
               "intervalFactor": 1,
               "legendFormat": "Non-2xx Requests (/min)",
               "refId": "C"
@@ -6893,25 +6882,22 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(rate(jaeger_http_server_requests_total{endpoint=~\"/api/services\"}[5m]))*60",
+              "expr": "sum(rate(jaeger_rpc_http_requests_total{endpoint=~\"/api/services\"}[5m]))*60",
               "format": "time_series",
-              "interval": "",
               "intervalFactor": 1,
               "legendFormat": "All requests (/min)",
               "refId": "A"
             },
             {
-              "expr": "sum(rate(jaeger_http_server_requests_total{endpoint=~\"/api/services\",status_code=~\"2xx\"}[5m]))*60",
+              "expr": "sum(rate(jaeger_rpc_http_requests_total{endpoint=~\"/api/services\",status_code=~\"2xx\"}[5m]))*60",
               "format": "time_series",
-              "interval": "",
               "intervalFactor": 1,
               "legendFormat": "2xx Requests (/min)",
               "refId": "B"
             },
             {
-              "expr": "sum(rate(jaeger_http_server_requests_total{endpoint=~\"/api/services\",status_code!=\"2xx\"}[5m]))*60",
+              "expr": "sum(rate(jaeger_rpc_http_requests_total{endpoint=~\"/api/services\",status_code!=\"2xx\"}[5m]))*60",
               "format": "time_series",
-              "interval": "",
               "intervalFactor": 1,
               "legendFormat": "Non-2xx Requests (/min)",
               "refId": "C"

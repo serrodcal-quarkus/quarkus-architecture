@@ -24,8 +24,12 @@ spec:
       port: 16686
       targetPort: 16686
       protocol: TCP
-    - name: http-metrics
+    - name: http-traces
       port: 14268
+      targetPort: 14268
+      protocol: TCP
+    - name: http-metrics
+      port: 14269
       targetPort: 14269
       protocol: TCP
   selector:
@@ -64,6 +68,8 @@ spec:
             - containerPort: 5778
               protocol: TCP
             - containerPort: 16686
+              protocol: TCP
+            - containerPort: 14268
               protocol: TCP
             - containerPort: 14269
               protocol: TCP
