@@ -46,3 +46,13 @@ spec:
             requests:
               memory: 1G
               cpu: 1000m
+          readinessProbe:
+            exec:
+              command: ["psql", "-w", "-U", "quarkus_test", "-d", "quarkus_test", "-c", "SELECT 1"]
+            initialDelaySeconds: 15
+            timeoutSeconds: 2
+          livenessProbe:
+            exec:
+              command: ["psql", "-w", "-U", "quarkus_test", "-d", "quarkus_test", "-c", "SELECT 1"]
+            initialDelaySeconds: 45
+            timeoutSeconds: 2
