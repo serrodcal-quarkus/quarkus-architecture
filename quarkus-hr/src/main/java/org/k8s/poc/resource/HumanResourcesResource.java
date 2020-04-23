@@ -14,16 +14,16 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Objects;
 
-@Path("/quarkus/employee")
+@Path("/api/v1/hr")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class EmployeeResource {
+public class HumanResourcesResource {
 
-    private static final Logger logger = Logger.getLogger(EmployeeResource.class);
+    private static final Logger logger = Logger.getLogger(HumanResourcesResource.class);
 
     private EmployeeService employeeService;
 
-    EmployeeResource(EmployeeService employeeService) {
+    HumanResourcesResource(EmployeeService employeeService) {
         this.employeeService =  employeeService;
     }
 
