@@ -27,29 +27,14 @@ public class HRResource {
         this.HRService = HRService;
     }
 
-    @GET
-    @Counted(name = "countGetEmployees", description = "Count number of served messages")
-    @Timed(name = "checksGetEmployees", description = "A measure of how much time takes to serve employees", unit = MetricUnits.MILLISECONDS)
-    public Multi<Employee> getEmployees() {
-        logger.info("getEmployees");
-        return HRService.getEmployees();
-    }
-
-    @GET
-    @Path("/{id}")
-    @Counted(name = "countGetEmployee", description = "Count number of served messages")
-    @Timed(name = "checksGetEmployee", description = "A measure of how much time takes to serve a employee", unit = MetricUnits.MILLISECONDS)
-    public Uni<Employee> getEmployee(@PathParam("id") Long id) {
-        logger.info("getEmployee with [id:" + id.toString() + "]");
-        return HRService.getEmployee(id);
-    }
-
     @POST
+    @Path("/employee/{employeeId}/assign/{deptId}")
     @Counted(name = "countCreateEmployee", description = "Count number of served messages")
     @Timed(name = "checksCreateEmployee", description = "A measure of how much time takes to create a employee", unit = MetricUnits.MILLISECONDS)
-    public Uni<Response> createEmployee(Employee employee) {
-        logger.info("createEmployee with [name:" + employee.name + "]");
-        return HRService.createEmployee(employee)
+    public Uni<Response> createEmployee(@PathParam("employeeId") Long employeeId, @PathParam("deptId") Long deptId) {
+        logger.info("createEmployee with [employeeId:" + employeeId.toString() + "]");
+        return null;
+        /*HRService.createEmployee(employee)
                 .map(id -> {
                     if (Objects.nonNull(id)) {
                         return Response.Status.OK;
@@ -58,7 +43,7 @@ public class HRResource {
                         return Response.Status.ACCEPTED;
                     }
                 })
-                .map(status -> Response.status(status).build());
+                .map(status -> Response.status(status).build());*/
     }
 
     @PUT
@@ -66,7 +51,8 @@ public class HRResource {
     @Timed(name = "checksUpdateEmployee", description = "A measure of how much time takes to update a employee", unit = MetricUnits.MILLISECONDS)
     public Uni<Response> updateEmployee(Employee employee) {
         logger.info("updateEmployee with [name:" + employee.name + "]");
-        return HRService.updateEmployee(employee)
+        return null;
+        /*HRService.updateEmployee(employee)
                 .map(updated -> {
                     if (updated) {
                         return Response.Status.OK;
@@ -75,7 +61,7 @@ public class HRResource {
                         return Response.Status.ACCEPTED;
                     }
                 })
-                .map(status -> Response.status(status).build());
+                .map(status -> Response.status(status).build());*/
     }
 
     @DELETE
@@ -84,7 +70,8 @@ public class HRResource {
     @Timed(name = "checksDeleteEmployee", description = "A measure of how much time takes to delete a employee", unit = MetricUnits.MILLISECONDS)
     public Uni<Response> deleteEmployee(@PathParam("id") Long id) {
         logger.info("deleteEmployee wit [id:" + id.toString() + "]");
-        return HRService.deleteEmployee(id)
+        return null;
+        /*HRService.deleteEmployee(id)
                 .map(deleted -> {
                     if (deleted) {
                         return Response.Status.OK;
@@ -93,7 +80,7 @@ public class HRResource {
                         return Response.Status.ACCEPTED;
                     }
                 })
-                .map(status -> Response.status(status).build());
+                .map(status -> Response.status(status).build());*/
     }
 
 }

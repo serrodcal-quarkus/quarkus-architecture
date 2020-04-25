@@ -2,27 +2,27 @@ package org.k8s.poc.service;
 
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
+import org.k8s.poc.domain.Department;
 import org.k8s.poc.domain.Employee;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
 @ApplicationScoped
 public class HRService {
 
-    private EmployeeRepository employeeRepository;
+    @Inject
+    @RestClient
+    EmployeeService employeeService;
 
-    HRService(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
-    }
+    @Inject
+    @RestClient
+    DepartmentService departmentService;
 
-    public Multi<Employee> getEmployees() { return employeeRepository.getEmployees(); }
 
-    public Uni<Employee> getEmployee(Long id) { return employeeRepository.getEmployee(id); }
+    public Uni<Boolean> assignEmployeeToDept(Employee employee) { return null; }
 
-    public Uni<Long> createEmployee(Employee employee) { return employeeRepository.saveEmployee(employee); }
-
-    public Uni<Boolean> updateEmployee(Employee employee) { return employeeRepository.updateEmployee(employee); }
-
-    public Uni<Boolean> deleteEmployee(Long id) { return employeeRepository.deleteEmployee(id); }
+    public Uni<Boolean> unassignEmployeeToDept(Long id) { return null; }
 
 }
