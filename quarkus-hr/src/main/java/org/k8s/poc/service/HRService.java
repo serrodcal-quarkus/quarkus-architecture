@@ -1,6 +1,5 @@
 package org.k8s.poc.service;
 
-import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.k8s.poc.domain.Department;
