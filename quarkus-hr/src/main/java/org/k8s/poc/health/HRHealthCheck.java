@@ -10,7 +10,7 @@ import javax.enterprise.context.ApplicationScoped;
 @Readiness
 @Liveness
 @ApplicationScoped
-public class EmployeeHealthCheck implements HealthCheck {
+public class HRHealthCheck implements HealthCheck {
 
     @Override
     public HealthCheckResponse call() {

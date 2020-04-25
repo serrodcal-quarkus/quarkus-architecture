@@ -7,7 +7,7 @@ import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.metrics.annotation.Timed;
 import org.jboss.logging.Logger;
 import org.k8s.poc.domain.Employee;
-import org.k8s.poc.service.EmployeeService;
+import org.k8s.poc.service.HRService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -17,14 +17,14 @@ import java.util.Objects;
 @Path("/api/v1/hr")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class HumanResourcesResource {
+public class HRResource {
 
-    private static final Logger logger = Logger.getLogger(HumanResourcesResource.class);
+    private static final Logger logger = Logger.getLogger(HRResource.class);
 
-    private EmployeeService employeeService;
+    private HRService HRService;
 
-    HumanResourcesResource(EmployeeService employeeService) {
-        this.employeeService =  employeeService;
+    HRResource(HRService HRService) {
+        this.HRService = HRService;
     }
 
     @GET
@@ -32,7 +32,7 @@ public class HumanResourcesResource {
     @Timed(name = "checksGetEmployees", description = "A measure of how much time takes to serve employees", unit = MetricUnits.MILLISECONDS)
     public Multi<Employee> getEmployees() {
         logger.info("getEmployees");
-        return employeeService.getEmployees();
+        return HRService.getEmployees();
     }
 
     @GET
@@ -41,7 +41,7 @@ public class HumanResourcesResource {
     @Timed(name = "checksGetEmployee", description = "A measure of how much time takes to serve a employee", unit = MetricUnits.MILLISECONDS)
     public Uni<Employee> getEmployee(@PathParam("id") Long id) {
         logger.info("getEmployee with [id:" + id.toString() + "]");
-        return employeeService.getEmployee(id);
+        return HRService.getEmployee(id);
     }
 
     @POST
@@ -49,7 +49,7 @@ public class HumanResourcesResource {
     @Timed(name = "checksCreateEmployee", description = "A measure of how much time takes to create a employee", unit = MetricUnits.MILLISECONDS)
     public Uni<Response> createEmployee(Employee employee) {
         logger.info("createEmployee with [name:" + employee.name + "]");
-        return employeeService.createEmployee(employee)
+        return HRService.createEmployee(employee)
                 .map(id -> {
                     if (Objects.nonNull(id)) {
                         return Response.Status.OK;
@@ -66,7 +66,7 @@ public class HumanResourcesResource {
     @Timed(name = "checksUpdateEmployee", description = "A measure of how much time takes to update a employee", unit = MetricUnits.MILLISECONDS)
     public Uni<Response> updateEmployee(Employee employee) {
         logger.info("updateEmployee with [name:" + employee.name + "]");
-        return employeeService.updateEmployee(employee)
+        return HRService.updateEmployee(employee)
                 .map(updated -> {
                     if (updated) {
                         return Response.Status.OK;
@@ -84,7 +84,7 @@ public class HumanResourcesResource {
     @Timed(name = "checksDeleteEmployee", description = "A measure of how much time takes to delete a employee", unit = MetricUnits.MILLISECONDS)
     public Uni<Response> deleteEmployee(@PathParam("id") Long id) {
         logger.info("deleteEmployee wit [id:" + id.toString() + "]");
-        return employeeService.deleteEmployee(id)
+        return HRService.deleteEmployee(id)
                 .map(deleted -> {
                     if (deleted) {
                         return Response.Status.OK;

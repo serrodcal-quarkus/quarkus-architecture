@@ -18,4 +18,4 @@ import javax.ws.rs.core.Application;
                         name = "Apache 2.0",
                         url = "http://www.apache.org/licenses/LICENSE-2.0.html"))
 )
-public class EmployeeApiApplication extends Application { }
+public class HRApiApplication extends Application { }

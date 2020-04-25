@@ -31,6 +31,16 @@
   </dependencyManagement>
   <dependencies>
     <dependency>
+      <groupId>org.k8s.poc</groupId>
+      <artifactId>employee-quarkus</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.k8s.poc</groupId>
+      <artifactId>department-quarkus</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-logging-gelf</artifactId>
     </dependency>
@@ -61,10 +71,6 @@
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-resteasy-jsonb</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-reactive-pg-client</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>

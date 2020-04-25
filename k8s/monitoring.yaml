@@ -102,7 +102,6 @@ data:
         scrape_interval: 5s
         static_configs:
           - targets: ['employee:8080']
-      - job_name: 'kubernetes-apiservers'
 
         kubernetes_sd_configs:
           - role: endpoints
