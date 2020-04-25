@@ -5,9 +5,7 @@ import io.smallrye.mutiny.Uni;
 import org.eclipse.microprofile.metrics.MetricUnits;
 import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.metrics.annotation.Timed;
-import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jboss.logging.Logger;
-import org.k8s.poc.domain.Employee;
 import org.k8s.poc.service.HRService;
 
 import javax.ws.rs.*;
@@ -21,10 +19,10 @@ public class HRResource {
 
     private static final Logger logger = Logger.getLogger(HRResource.class);
 
-    private HRService HRService;
+    private HRService hrService;
 
     HRResource(HRService HRService) {
-        this.HRService = HRService;
+        this.hrService = HRService;
     }
 
     @POST
@@ -32,36 +30,31 @@ public class HRResource {
     @Counted(name = "countAssignEmployeeToDept", description = "Count number of served messages")
     @Timed(name = "checksAssignEmployeeToDept", description = "A measure of how much time takes to create a employee", unit = MetricUnits.MILLISECONDS)
     public Uni<Response> assignEmployeeToDept(@PathParam("employeeId") Long employeeId, @PathParam("deptId") Long deptId) {
-        logger.info("assignEmployeeToDept with [employeeId:" + employeeId.toString() + "]");
-        return null;
-        /*HRService.createEmployee(employee)
-                .map(id -> {
-                    if (Objects.nonNull(id)) {
-                        return Response.Status.OK;
-                    } else {
-                        logger.error("Some error saving employee with [id:" + String.valueOf(id) + "]");
-                        return Response.Status.ACCEPTED;
-                    }
-                })
-                .map(status -> Response.status(status).build());*/
+        logger.info("assignEmployeeToDept with [employeeId:" + employeeId.toString() + ", dept:" + deptId.toString() + "]");
+        return hrService.assignEmployeeToDept(employeeId, deptId).map(assigned -> {
+            if (assigned) {
+                return Response.Status.OK;
+            } else {
+                logger.error("Some error saving employee with [id:" + String.valueOf(employeeId) + "]");
+                return Response.Status.ACCEPTED;
+            }
+        }).map(status -> Response.status(status).build());
     }
 
     @PUT
+    @Path("/employee/{employeeId}/assign/{deptId}")
     @Counted(name = "countChangeDeptOfEmployee", description = "Count number of served messages")
     @Timed(name = "checksChangeDeptOfEmployee", description = "A measure of how much time takes to update a employee", unit = MetricUnits.MILLISECONDS)
-    public Uni<Response> changeDeptOfEmployee(Employee employee) {
-        logger.info("updateEmployee with [name:" + employee.name + "]");
-        return null;
-        /*HRService.updateEmployee(employee)
-                .map(updated -> {
-                    if (updated) {
-                        return Response.Status.OK;
-                    } else {
-                        logger.error("Some error updating employee  with [id:" + String.valueOf(employee.id) + "]");
-                        return Response.Status.ACCEPTED;
-                    }
-                })
-                .map(status -> Response.status(status).build());*/
+    public Uni<Response> changeDeptOfEmployee(@PathParam("employeeId") Long employeeId, @PathParam("deptId") Long deptId) {
+        logger.info("changeDeptOfEmployee with [name:" + employeeId.toString() + ", dept:" + deptId.toString() + "]");
+        return hrService.assignEmployeeToDept(employeeId, deptId).map(assigned -> {
+            if (assigned) {
+                return Response.Status.OK;
+            } else {
+                logger.error("Some error saving employee with [id:" + String.valueOf(employeeId) + "]");
+                return Response.Status.ACCEPTED;
+            }
+        }).map(status -> Response.status(status).build());
     }
 
     @DELETE
@@ -69,18 +62,17 @@ public class HRResource {
     @Counted(name = "countUnassignEmployeeToDept", description = "Count number of served messages")
     @Timed(name = "checksUnassignEmployeeToDept", description = "A measure of how much time takes to delete a employee", unit = MetricUnits.MILLISECONDS)
     public Uni<Response> unassignEmployeeToDept(@PathParam("id") Long id) {
-        logger.info("deleteEmployee wit [id:" + id.toString() + "]");
-        return null;
-        /*HRService.deleteEmployee(id)
-                .map(deleted -> {
-                    if (deleted) {
+        logger.info("unassignEmployeeToDept wit [id:" + id.toString() + "]");
+        return hrService.unassignEmployeeToDept(id)
+                .map(updated -> {
+                    if (updated) {
                         return Response.Status.OK;
                     } else {
                         logger.error("Some error deleting employee  with [id:" + String.valueOf(id) + "]");
                         return Response.Status.ACCEPTED;
                     }
                 })
-                .map(status -> Response.status(status).build());*/
+                .map(status -> Response.status(status).build());
     }
 
 }

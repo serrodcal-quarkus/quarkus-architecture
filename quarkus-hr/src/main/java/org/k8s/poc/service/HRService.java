@@ -7,6 +7,7 @@ import org.k8s.poc.domain.Employee;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.Objects;
 
 @ApplicationScoped
 public class HRService {
@@ -19,9 +20,31 @@ public class HRService {
     @RestClient
     DepartmentService departmentService;
 
+    public Uni<Boolean> assignEmployeeToDept(Long employeeId, Long deptId) {
+        return departmentService.getDepartment(deptId).flatMap(dept -> {
+            if (Objects.nonNull(dept)){
+                return employeeService.getEmployee(employeeId).flatMap( empl -> {
+                    if (Objects.nonNull(empl) && empl.deptId != dept.id){
+                        return employeeService.updateEmployee(new Employee(empl.id, empl.name, dept.id));
+                    } else {
+                        return Uni.createFrom().item(false);
+                    }
+                } );
+            } else {
+                return Uni.createFrom().item(false);
+            }
+        });
+    }
 
-    public Uni<Boolean> assignEmployeeToDept(Employee employee) { return null; }
-
-    public Uni<Boolean> unassignEmployeeToDept(Long id) { return null; }
+    public Uni<Boolean> unassignEmployeeToDept(Long id) {
+        return employeeService.getEmployee(id).flatMap( empl -> {
+            if (Objects.nonNull(empl)) {
+                empl.deptId = null;
+                return employeeService.updateEmployee(empl);
+            } else {
+                return Uni.createFrom().item(false);
+            }
+        });
+    }
 
 }
