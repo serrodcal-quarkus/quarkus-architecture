@@ -26,7 +26,13 @@ public class HRService {
                 return employeeService.getEmployee(employeeId).flatMap( empl -> {
                     if (Objects.nonNull(empl) && empl.deptId != dept.id){
                         empl.deptId = dept.id;
-                        return employeeService.updateEmployee(empl);
+                        return employeeService.updateEmployee(empl).flatMap(response -> {
+                            if (response.getStatus() == 200) {
+                                return Uni.createFrom().item(true);
+                            } else {
+                                return Uni.createFrom().item(false);
+                            }
+                        });
                     } else {
                         return Uni.createFrom().item(false);
                     }
@@ -41,7 +47,13 @@ public class HRService {
         return employeeService.getEmployee(id).flatMap( empl -> {
             if (Objects.nonNull(empl)) {
                 empl.deptId = null;
-                return employeeService.updateEmployee(empl);
+                return employeeService.updateEmployee(empl).flatMap(response -> {
+                    if (response.getStatus() == 200) {
+                        return Uni.createFrom().item(true);
+                    } else {
+                        return Uni.createFrom().item(false);
+                    }
+                });
             } else {
                 return Uni.createFrom().item(false);
             }

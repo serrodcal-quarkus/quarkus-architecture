@@ -7,6 +7,7 @@ import org.k8s.poc.domain.Employee;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Path("/employee")
 @RegisterRestClient(configKey="employee-api")
@@ -29,6 +30,6 @@ public interface EmployeeService {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Uni<Boolean> updateEmployee(Employee employee);
+    public Uni<Response> updateEmployee(Employee employee);
 
 }
