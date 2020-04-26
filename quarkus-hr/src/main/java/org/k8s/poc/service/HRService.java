@@ -25,7 +25,8 @@ public class HRService {
             if (Objects.nonNull(dept)){
                 return employeeService.getEmployee(employeeId).flatMap( empl -> {
                     if (Objects.nonNull(empl) && empl.deptId != dept.id){
-                        return employeeService.updateEmployee(new Employee(empl.id, empl.name, dept.id));
+                        empl.deptId = dept.id;
+                        return employeeService.updateEmployee(empl);
                     } else {
                         return Uni.createFrom().item(false);
                     }

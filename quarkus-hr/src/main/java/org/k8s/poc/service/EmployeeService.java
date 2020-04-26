@@ -9,7 +9,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 @Path("/employee")
-@RegisterRestClient //(configKey="employee-api")
+@RegisterRestClient(configKey="employee-api")
 public interface EmployeeService {
 
     @GET
@@ -27,8 +27,8 @@ public interface EmployeeService {
     public Multi<Employee> getEmployeesByDept(@PathParam("deptId") Long deptId);
 
     @PUT
-    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Uni<Boolean> updateEmployee(Employee employee);
 
 }

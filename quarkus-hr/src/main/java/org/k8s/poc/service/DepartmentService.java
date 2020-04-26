@@ -12,7 +12,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.*;
 
 @Path("/department")
-@RegisterRestClient //(configKey="department-api")
+@RegisterRestClient(configKey="department-api")
 public interface DepartmentService {
 
     @GET
