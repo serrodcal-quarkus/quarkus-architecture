@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: employee
+  name: hr
   annotations:
     prometheus.io/should_be_scraped: "true"
 spec:
@@ -11,21 +11,21 @@ spec:
       targetPort: 8080
       protocol: TCP
   selector:
-    app: employee
+    app: hr
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: employee
+  name: hr
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: employee
+      app: hr
   template:
     metadata:
       labels:
-        app: employee
+        app: hr
       annotations:
         prometheus.io/should_be_scraped: "true"
         prometheus.io/metric_path: "/metrics"
@@ -33,15 +33,17 @@ spec:
         prometheus.io/scrape_scheme: "http"
     spec:
       containers:
-        - name: employee
-          image: serrodcal/employees-quarkus-prometheus-jvm:1.0.3
+        - name: hr
+          image: serrodcal/hr:1.0.1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
               protocol: TCP
           env:
-            - name: QUARKUS_DATASOURCE_REACTIVE_URL
-              value: postgresql://database:5432/quarkus_test
+            - name: EMPLOYEE_URL
+              value: http://employee:8080/api/v1
+            - name: DEPARTMENT_URL
+              value: http://department:8080/api/v1
           resources:
             limits:
               memory: 1G
@@ -65,12 +67,12 @@ spec:
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: employee
+  name: hr
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: employee
+    name: hr
   minReplicas: 1
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80
