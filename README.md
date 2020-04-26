@@ -45,18 +45,20 @@ Remove all Istio components with:
 istioctl manifest generate --set profile=demo | kubectl delete -f -
 ```
 
-## Deploying application
+## Deploying all the stack
 
 Deploy the application with:
 ```
-kubectl apply -f k8s/
+kubectl apply -f k8s
 ```
 
 ## Exposing ports
 
 Expose the application with:
 ```
-kubectl port-forward <employee_pod_name> 8080
+kubectl port-forward <hr_pod_name> 8080
+kubectl port-forward <employee_pod_name> 8081:8080
+kubectl port-forward <department_pod_name> 8082:8080
 ```
 
 Expose the prometheus' dashboard with:
@@ -79,104 +81,35 @@ Expose the jaeger's dashboard with:
 kubectl port-forward <jaeger_pod_name> 16686
 ```
 
-Access to kiali's Dashboard (`admin;admin`) provided by Istio:
+Access to kiali's Dashboard (`admin;admin`) provided by Istio (only if you enable Istio):
 ```
 istioctl dashboard kiali
 ```
 
-## Endpoints
+## Test
 
-Swagger file is given below:
-```yaml
----
-openapi: 3.0.1
-info:
-  title: Employee API
-  version: "1.0.0"
-paths:
-  /quarkus/employee:
-    get:
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MultiEmployee'
-    put:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Employee'
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UniResponse'
-    post:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Employee'
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UniResponse'
-  /quarkus/employee/{id}:
-    get:
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          format: int64
-          type: integer
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UniEmployee'
-    delete:
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          format: int64
-          type: integer
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UniResponse'
-components:
-  schemas:
-    Employee:
-      type: object
-      properties:
-        id:
-          format: int64
-          type: integer
-        name:
-          type: string
-    UniResponse:
-      type: object
-    UniEmployee:
-      type: object
-    MultiEmployee:
-      type: object
+### HR
+
+* Assign employee to a department:
 ```
+curl -X POST localhost:8080/api/v1/hr/employee/2/assign/1
+```
+
+### Employee
+
+* Get all employees:
+```
+curl localhost:8081/api/v1/employee
+```
+
+### Department
+
+* Get all departments:
+```
+curl localhost:8081/api/v1/department
+```
+
+## Dashboards
 
 Access to prometheus' dashboard with: [localhost:9090](http:/localhost:9090)
 
@@ -190,12 +123,15 @@ Access to jaeger's dashboard with: [localhost:16686](http://localhost:16686)
 
 The first time all the services are deployed in Kubernetes, the nodes has to
 download all the images in YAML files to the internal Docker's Registry. This may
-cause some error at the first time. Try to load all the images to the nodes with:
+cause some error at the first time. Try to load all the images to the nodes from
+your local registry with:
 ```
 kind load docker-image docker.elastic.co/elasticsearch/elasticsearch-oss:6.8.2 && \
 kind load docker-image docker.elastic.co/logstash/logstash-oss:6.8.2 && \
 kind load docker-image docker.elastic.co/kibana/kibana-oss:6.8.2 && \
-kind load docker-image serrodcal/employees-quarkus-prometheus-jvm:1.0.3 && \
+kind load docker-image serrodcal/employee:1.0.0 && \
+kind load docker-image serrodcal/department:1.0.0 && \
+kind load docker-image serrodcal/hr:1.0.0 && \
 kind load docker-image postgres:10.5 && \
 kind load docker-image prom/prometheus:v2.17.1 && \
 kind load docker-image grafana/grafana:6.7.2 && \
