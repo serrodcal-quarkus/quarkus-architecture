@@ -91,14 +91,17 @@ data:
           listen 8080;
 
           location ~* ^/api/v1/employee/?(.*) {
+            add_header 'Access-Control-Allow-Origin' '*';
             proxy_pass http://employee:8080;
           }
 
           location ~* ^/api/v1/department/?(.*) {
+            add_header 'Access-Control-Allow-Origin' '*';
             proxy_pass http://department:8080;
           }
 
           location ~* ^/api/v1/hr/?(.*) {
+            add_header 'Access-Control-Allow-Origin' '*';
             proxy_pass http://hr:8080;
           }
 
