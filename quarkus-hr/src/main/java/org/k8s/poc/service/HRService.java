@@ -1,6 +1,7 @@
 package org.k8s.poc.service;
 
 import io.smallrye.mutiny.Uni;
+import org.eclipse.microprofile.faulttolerance.CircuitBreaker;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.k8s.poc.domain.Department;
 import org.k8s.poc.domain.Employee;
@@ -20,7 +21,9 @@ public class HRService {
     @RestClient
     DepartmentService departmentService;
 
+    @CircuitBreaker(requestVolumeThreshold = 4)
     public Uni<Boolean> assignEmployeeToDept(Long employeeId, Long deptId) {
+
         return departmentService.getDepartment(deptId).flatMap(dept -> {
             if (Objects.nonNull(dept)){
                 return employeeService.getEmployee(employeeId).flatMap( empl -> {
@@ -43,6 +46,7 @@ public class HRService {
         });
     }
 
+    @CircuitBreaker(requestVolumeThreshold = 4)
     public Uni<Boolean> unassignEmployeeToDept(Long id) {
         return employeeService.getEmployee(id).flatMap( empl -> {
             if (Objects.nonNull(empl)) {

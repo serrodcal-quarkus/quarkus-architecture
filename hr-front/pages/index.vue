@@ -13,14 +13,14 @@
           <h1>Department</h1>
           <b-button variant="info" class="mb-2 float-right">New Department</b-button>
           <div>
-            <b-table striped hover :items="items_dept"></b-table>
+            <b-table hover :items="items_dept"></b-table>
           </div>
         </b-col>
         <b-col>
           <h1>Employee</h1>
           <b-button variant="info" class="mb-2 float-right">New Employee</b-button>
           <div>
-            <b-table striped hover :items="items_empl"></b-table>
+            <b-table hover :items="items_empl"></b-table>
           </div>
         </b-col>
       </b-row>
