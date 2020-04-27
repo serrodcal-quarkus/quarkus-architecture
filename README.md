@@ -32,9 +32,9 @@ In order to test all the endpoints, please expose the API Gateway with:
 kubectl port-forward <gateway_pod_name> 8080
 ```
 
-![](/img/front.png)
+Once the gateway is exposed open to the front application in a browser by [localhost:8080](http://localhost:8080).
 
-Once the gateway is exposed access to the front application in [localhost:8080](localhost:8080).
+![](/img/front.png)
 
 Or use the browser following the pattern below:
 
