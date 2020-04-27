@@ -2,7 +2,7 @@
 
 ![](/img/quarkus.png)
 
-Sample Quarkus application with the following dependencies:
+Sample Quarkus architecture with the following dependencies:
 
 * [Microprofile metrics](https://quarkus.io/guides/microprofile-metrics)
 * [Microprofile health](https://quarkus.io/guides/microprofile-health)
@@ -32,33 +32,35 @@ In order to test all the endpoints, please expose the API Gateway with:
 kubectl port-forward <gateway_pod_name> 8080
 ```
 
-Once you expose the gateway all the request work following the pattern below:
+![](/img/front.png)
+
+Once the gateway is exposed access to the front application in [localhost:8080](localhost:8080).
+
+Or use the browser following the pattern below:
 
 * `localhost:8080/api/v1/{employee|department|hr}`
 
-The Swagger definition is in the following URL:
-
-* `localhost:8080/{employee|department|hr}/swagger-ui`
+**Note**: Expose each microservice and access to `/swagger-ui` to read the API specification.
 
 ### HR example
 
-* Assign employee to a department:
+Assign employee to a department:
 ```
 curl -X POST localhost:8080/api/v1/hr/employee/2/assign/1
 ```
 
 ### Employee example
 
-* Get all employees:
+Get all employees:
 ```
-curl localhost:8081/api/v1/employee
+curl localhost:8080/api/v1/employee
 ```
 
 ### Department example
 
-* Get all departments:
+Get all departments:
 ```
-curl localhost:8081/api/v1/department
+curl localhost:8080/api/v1/department
 ```
 
 ## Exposing dashboard
@@ -115,3 +117,4 @@ kind load docker-image jaegertracing/all-in-one:1.17.1
 ## Author
 
 * [Serrodcal](https://github.com/serrodcal)
+* [Lechowsky](https://github.com/lechowsky)
