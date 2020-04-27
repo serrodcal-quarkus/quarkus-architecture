@@ -5,8 +5,8 @@ metadata:
 spec:
   ports:
     - name: http
-      port: 80
-      targetPort: 80
+      port: 8080
+      targetPort: 8080
       protocol: TCP
   selector:
     app: gateway
@@ -30,7 +30,7 @@ spec:
           image: nginx:1.17.10-alpine
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 80
+            - containerPort: 8080
               protocol: TCP
           resources:
             limits:
@@ -41,7 +41,8 @@ spec:
               cpu: 1000m
           volumeMounts:
           - name: gateway-config
-            mountPath: /etc/nginx
+            mountPath: /etc/nginx/nginx.conf
+            subPath: nginx.conf
           # statics folder: /usr/share/nginx/html
       volumes:
       - name: gateway-config
@@ -68,7 +69,7 @@ data:
     }
 
     http {
-        #include       /etc/nginx/mime.types;
+        include       /etc/nginx/mime.types;
         default_type  application/octet-stream;
 
         log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
@@ -85,4 +86,22 @@ data:
         #gzip  on;
 
         include /etc/nginx/conf.d/*.conf;
+
+        server {
+          listen 8080;
+
+          location ~* ^/api/v1/employee/?(.*) {
+            proxy_pass http://employee:8080;
+          }
+
+          location ~* ^/api/v1/department/?(.*) {
+            proxy_pass http://department:8080;
+          }
+
+          location ~* ^/api/v1/hr/?(.*) {
+            proxy_pass http://hr:8080;
+          }
+
+        }
+
     }

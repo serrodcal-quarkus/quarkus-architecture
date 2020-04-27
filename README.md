@@ -1,4 +1,4 @@
-# quarkus-prometheus
+# Quarkus Architecture
 
 ![](/img/quarkus.png)
 
@@ -10,39 +10,12 @@ Sample Quarkus application with the following dependencies:
 * [Open API and Swagger](https://quarkus.io/guides/openapi-swaggerui)
 * [GELF with ELK](https://quarkus.io/guides/centralized-log-management)
 
-## Endpoints
-
 
 ## Creating Kubernetes local cluster
 
 Create a Kubernetes local cluster with:
 ```
 kind create cluster --config kind/kind-ha-config.yaml
-```
-
-If you want to use Istio follow below instructions:
-```
-istioctl manifest apply --set profile=demo
-```
-
-Auto sidecar injection with:
-```
-kubectl label ns default istio-injection=enabled
-```
-
-**Note**: `istio-injection=enabled` label enable the automatic sidecar injection.
-Remove label with: `kubectl label ns default istio-injection-`
-
-Or, manual sidecar injection with:
-```
-cat k8s/<file>.yaml | istioctl kube-inject -f - | kubectl apply -f -
-```
-
-### Clean up Istio
-
-Remove all Istio components with:
-```
-istioctl manifest generate --set profile=demo | kubectl delete -f -
 ```
 
 ## Deploying all the stack
@@ -52,14 +25,43 @@ Deploy the application with:
 kubectl apply -f k8s
 ```
 
-## Exposing ports
+## Test
 
-Expose the application with:
+In order to test all the endpoints, please expose the API Gateway with:
 ```
-kubectl port-forward <hr_pod_name> 8080
-kubectl port-forward <employee_pod_name> 8081:8080
-kubectl port-forward <department_pod_name> 8082:8080
+kubectl port-forward <gateway_pod_name> 8080
 ```
+
+Once you expose the gateway all the request work following the pattern below:
+
+* `localhost:8080/api/v1/{employee|department|hr}`
+
+The Swagger definition is in the following URL:
+
+* `localhost:8080/{employee|department|hr}/swagger-ui`
+
+### HR example
+
+* Assign employee to a department:
+```
+curl -X POST localhost:8080/api/v1/hr/employee/2/assign/1
+```
+
+### Employee example
+
+* Get all employees:
+```
+curl localhost:8081/api/v1/employee
+```
+
+### Department example
+
+* Get all departments:
+```
+curl localhost:8081/api/v1/department
+```
+
+## Exposing dashboard
 
 Expose the prometheus' dashboard with:
 ```
@@ -81,35 +83,7 @@ Expose the jaeger's dashboard with:
 kubectl port-forward <jaeger_pod_name> 16686
 ```
 
-Access to kiali's Dashboard (`admin;admin`) provided by Istio (only if you enable Istio):
-```
-istioctl dashboard kiali
-```
-
-## Test
-
-### HR
-
-* Assign employee to a department:
-```
-curl -X POST localhost:8080/api/v1/hr/employee/2/assign/1
-```
-
-### Employee
-
-* Get all employees:
-```
-curl localhost:8081/api/v1/employee
-```
-
-### Department
-
-* Get all departments:
-```
-curl localhost:8081/api/v1/department
-```
-
-## Dashboards
+### Dashboards
 
 Access to prometheus' dashboard with: [localhost:9090](http:/localhost:9090)
 
