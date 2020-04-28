@@ -95,6 +95,7 @@ data:
           set $department_upstream "http://department.default.svc.cluster.local:8080";
           set $hr_upstream "http://hr.default.svc.cluster.local:8080";
           set $grafana_upstream "http://grafana.default.svc.cluster.local:3000";
+          set $jaeger_upstream "http://jaeger.default.svc.cluster.local:16686";
           set $kibana_upstream "http://kibana.default.svc.cluster.local:5601";
 
           # Need it for lazy load
@@ -119,10 +120,9 @@ data:
             proxy_pass $grafana_upstream;
           }
 
-          #location /jaeger/ {
-          #  add_header 'Access-Control-Allow-Origin' '*';
-          #  proxy_pass http://jaeger:16686/;
-          #}
+          location /jaeger {
+            proxy_pass $jaeger_upstream;
+          }
 
           location /kibana {
             proxy_pass $kibana_upstream;

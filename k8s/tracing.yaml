@@ -58,6 +58,9 @@ spec:
         - name: jaeger
           image: jaegertracing/all-in-one:1.17.1
           imagePullPolicy: IfNotPresent
+          env:
+            - name: QUERY_BASE_PATH
+              value: "/jaeger"
           ports:
             - containerPort: 5775
               protocol: UDP
