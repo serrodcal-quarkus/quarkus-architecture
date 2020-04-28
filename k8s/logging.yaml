@@ -170,3 +170,19 @@ spec:
             requests:
               memory: 1G
               cpu: 1000m
+          #volumeMounts:
+          #- name: kibana-config
+          #  mountPath: /etc/kibana/kibana.yaml
+          #  subPath: kibana.yaml
+      #volumes:
+      #- name: kibana-config
+      #  configMap:
+      #    name: kibana-cm
+#---
+#kind: ConfigMap
+#apiVersion: v1
+#metadata:
+#  name: kibana-cm
+#data:
+#  kibana.yaml: |
+#    server.basePath: "/kibana"
