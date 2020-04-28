@@ -11,6 +11,14 @@ Sample Quarkus architecture with the following dependencies:
 * [GELF with ELK](https://quarkus.io/guides/centralized-log-management)
 
 
+## Logical view
+
+![](/img/logical.png)
+
+## Physical view
+
+![](/img/physical.png)
+
 ## Creating Kubernetes local cluster
 
 Create a Kubernetes local cluster with:
