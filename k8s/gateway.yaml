@@ -97,6 +97,7 @@ data:
           set $grafana_upstream "http://grafana.default.svc.cluster.local:3000";
           set $jaeger_upstream "http://jaeger.default.svc.cluster.local:16686";
           set $kibana_upstream "http://kibana.default.svc.cluster.local:5601";
+          set $prometheus_upstream "http://prometheus.default.svc.cluster.local:9090";
 
           # Need it for lazy load
           resolver kube-dns.kube-system.svc.cluster.local ipv6=off;
@@ -131,6 +132,10 @@ data:
             proxy_set_header Connection 'upgrade';
             proxy_set_header Host $host;
             proxy_cache_bypass $http_upgrade;
+          }
+
+          location /prometheus {
+            proxy_pass $prometheus_upstream;
           }
 
         }
