@@ -311,6 +311,9 @@ spec:
               memory: 1G
               cpu: 1000m
           volumeMounts:
+          - name: grafana-config
+            mountPath: /etc/grafana/grafana.ini
+            subPath: grafana.ini
           - name: grafana-datasource-provider
             mountPath: /etc/grafana/provisioning/datasources
           - name: grafana-dashboard-provider
@@ -318,6 +321,12 @@ spec:
           - name: employee-json-dashboard
             mountPath: /var/lib/grafana/dashboards
       volumes:
+      - name: grafana-config
+        configMap:
+          name: grafana-cm
+          items:
+            - key: grafana.ini
+              path: grafana.ini
       - name: grafana-datasource-provider
         configMap:
           name: grafana-cm
@@ -348,6 +357,11 @@ kind: ConfigMap
 metadata:
   name: grafana-cm
 data:
+  grafana.ini: |-
+    [server]
+    domain = localhost
+    root_url = %(protocol)s://%(domain)s:%(http_port)s/grafana/
+    serve_from_sub_path = true
   prometheus.yaml: |-
     apiVersion: 1
     datasources:
