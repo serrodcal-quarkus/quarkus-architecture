@@ -115,30 +115,18 @@ data:
           #}
 
           #location /jaeger/ {
-            #add_header 'Access-Control-Allow-Origin' '*';
+          #  add_header 'Access-Control-Allow-Origin' '*';
           #  proxy_pass http://jaeger:16686/;
           #}
 
-          #location ~ /kibana/(?<kibana_uri>.*) {
-            # remote server that kibana is running on
-          #  proxy_pass http://kibana:5601/$kibana_uri;
-          #  proxy_set_header Authorization "Basic *****";
-          #  proxy_set_header X-Forwarded-User $http_x_forwarded_for;
-          #}
-
-          #location /kibana/ {
-          #  proxy_pass http://kibana:5601/;
-          #  proxy_http_version 1.1;
-          #  proxy_set_header Upgrade $http_upgrade;
-          #  proxy_set_header Connection 'upgrade';
-          #  proxy_set_header Host $host;
-          #  proxy_cache_bypass $http_upgrade;
-            #proxy_redirect off;
-            #proxy_buffering off;
-            #proxy_http_version 1.1;
-            #proxy_set_header Connection "Keep-Alive";
-            #proxy_set_header Proxy-Connection "Keep-Alive";
-          #}
+          location /kibana {
+            proxy_pass http://kibana:5601;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Host $host;
+            proxy_cache_bypass $http_upgrade;
+          }
 
         }
 

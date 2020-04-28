@@ -170,19 +170,25 @@ spec:
             requests:
               memory: 1G
               cpu: 1000m
-          #volumeMounts:
-          #- name: kibana-config
-          #  mountPath: /etc/kibana/kibana.yaml
-          #  subPath: kibana.yaml
-      #volumes:
-      #- name: kibana-config
-      #  configMap:
-      #    name: kibana-cm
-#---
-#kind: ConfigMap
-#apiVersion: v1
-#metadata:
-#  name: kibana-cm
-#data:
-#  kibana.yaml: |
-#    server.basePath: "/kibana"
+          volumeMounts:
+          - name: kibana-config
+            mountPath: /usr/share/kibana/config/kibana.yml
+            subPath: kibana.yml
+      volumes:
+      - name: kibana-config
+        configMap:
+          name: kibana-cm
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kibana-cm
+data:
+  kibana.yml: |
+    # Default Kibana configuration for docker target
+    server.name: kibana
+    server.host: "0"
+    elasticsearch.hosts: [ "http://elasticsearch:9200" ]
+    # Configuration to expose the dashboard through the API Gateway
+    server.basePath: "/kibana"
+    server.rewriteBasePath: true
