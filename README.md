@@ -33,75 +33,30 @@ Deploy the application with:
 kubectl apply -f k8s
 ```
 
-## Test
+## Access to API Gateway
 
-In order to test all the endpoints, please expose the API Gateway with:
+All the resources all exposed through NGINX server, which acts as an API Gateway:
+
 ```
 kubectl port-forward <gateway_pod_name> 8080
 ```
 
-Once the gateway is exposed open to the front application in a browser by [localhost:8080](http://localhost:8080).
+Then open the following URL [localhost:8080](http://localhost:8080) in a browser
+to access to the Web application.
 
 ![](/img/front.png)
 
-Or use the browser following the pattern below:
+### Accessing to the dashboards
 
-* `localhost:8080/api/v1/{employee|department|hr}`
+Open the following URLs in a browser:
 
-**Note**: Expose each microservice and access to `/swagger-ui` to read the API specification.
+* Access to grafana's dashboard with: `[localhost:8080/grafana](localhost:8080/grafana)`
 
-### HR example
+* Access to kibana's dashboard with: `[localhost:8080/kibana](localhost:8080/kibana)`
 
-Assign employee to a department:
-```
-curl -X POST localhost:8080/api/v1/hr/employee/2/assign/1
-```
+* Access to jaeger's dashboard with: `[localhost:8080/jaeger](localhost:8080/jaeger)`
 
-### Employee example
-
-Get all employees:
-```
-curl localhost:8080/api/v1/employee
-```
-
-### Department example
-
-Get all departments:
-```
-curl localhost:8080/api/v1/department
-```
-
-## Exposing dashboard
-
-Expose the prometheus' dashboard with:
-```
-kubectl port-forward <prometheus_pod_name> 9090
-```
-
-Expose the grafana's dashboard with:
-```
-kubectl port-forward <grafana_pod_name> 3000
-```
-
-Expose the kibana's dashboard with:
-```
-kubectl port-forward <kibana_pod_name> 5601
-```
-
-Expose the jaeger's dashboard with:
-```
-kubectl port-forward <jaeger_pod_name> 16686
-```
-
-### Dashboards
-
-Access to prometheus' dashboard with: [localhost:9090](http:/localhost:9090)
-
-Access to grafana's dashboard with: [localhost:3000](http:/localhost:3000)
-
-Access to kibana's dashboard with: [localhost:5601](http://localhost:5601)
-
-Access to jaeger's dashboard with: [localhost:16686](http://localhost:16686)
+* Access to prometheus' dashboard with: `[localhost:8080/prometheus](localhost:8080/prometheus)`
 
 ## Load images to avoid errors
 
