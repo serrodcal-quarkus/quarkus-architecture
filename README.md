@@ -50,13 +50,13 @@ to access to the Web application.
 
 Open the following URLs in a browser:
 
-* Access to [grafana's dashboard](localhost:8080/grafana) with: `localhost:8080/grafana`
+* Access to [grafana's dashboard](http://localhost:8080/grafana) with: `http://localhost:8080/grafana`
 
-* Access to [kibana's dashboard](localhost:8080/kibana) with: `localhost:8080/kibana`
+* Access to [kibana's dashboard](http://localhost:8080/kibana) with: `http://localhost:8080/kibana`
 
-* Access to [jaeger's dashboard](localhost:8080/jaeger) with: `localhost:8080/jaeger`
+* Access to [jaeger's dashboard](http://localhost:8080/jaeger) with: `http://localhost:8080/jaeger`
 
-* Access to [prometheus' dashboard](localhost:8080/prometheus) with: `localhost:8080/prometheus`
+* Access to [prometheus' dashboard](http://localhost:8080/prometheus) with: `http://localhost:8080/prometheus`
 
 ## Load images to avoid errors
 
