@@ -9,7 +9,7 @@ Sample Quarkus architecture with the following dependencies:
 * [Opentracing](https://quarkus.io/guides/opentracing)
 * [Open API and Swagger](https://quarkus.io/guides/openapi-swaggerui)
 * [GELF with ELK](https://quarkus.io/guides/centralized-log-management)
-
+* [Fault tolerance](https://quarkus.io/guides/microprofile-fault-tolerance)
 
 ## Logical view
 
