@@ -120,6 +120,21 @@ data:
             proxy_pass $hr_upstream;
           }
 
+          # Expose swagger-ui
+          location ~* ^/employee/(.*) {
+            proxy_pass $employee_upstream;
+          }
+
+          # Expose swagger-ui
+          location ~* ^/department/(.*) {
+            proxy_pass $department_upstream;
+          }
+
+          # Expose swagger-ui
+          location ~* ^/hr/(.*) {
+            proxy_pass $hr_upstream;
+          }
+
           location /grafana {
             proxy_pass $grafana_upstream;
           }

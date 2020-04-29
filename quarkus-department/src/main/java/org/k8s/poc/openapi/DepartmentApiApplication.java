@@ -9,7 +9,7 @@ import javax.ws.rs.core.Application;
 @OpenAPIDefinition(
         info = @Info(
                 title="Department API",
-                version = "1.0.0",
+                version = "1.0.1",
                 contact = @Contact(
                         name = "Example API Support",
                         url = "http://exampleurl.com/contact",
