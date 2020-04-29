@@ -58,6 +58,11 @@ Open the following URLs in a browser:
 
 * Access to [prometheus' dashboard](http://localhost:8080/prometheus) with: `http://localhost:8080/prometheus`
 
+* Access to swagger's dashboard:
+  * Employee: [localhost:8080/employee/swagger-ui](http://localhost:8080/employee/swagger-ui)
+  * Department: [localhost:8080/department/swagger-ui](http://localhost:8080/department/swagger-ui)
+  * Human Resources: [localhost:8080/hr/swagger-ui](http://localhost:8080/hr/swagger-ui)
+
 ## Load images to avoid errors
 
 The first time all the services are deployed in Kubernetes, the nodes has to
