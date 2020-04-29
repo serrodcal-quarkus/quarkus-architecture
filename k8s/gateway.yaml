@@ -110,11 +110,13 @@ data:
 
           location ~* ^/api/v1/department/?(.*) {
             add_header 'Access-Control-Allow-Origin' '*';
+            add_header 'Access-Control-Allow-Methods' 'OPTIONS, GET, POST, PUT, DELETE';
             proxy_pass $department_upstream;
           }
 
           location ~* ^/api/v1/hr/?(.*) {
             add_header 'Access-Control-Allow-Origin' '*';
+            add_header 'Access-Control-Allow-Methods' 'OPTIONS, GET, POST, PUT, DELETE';
             proxy_pass $hr_upstream;
           }
 
