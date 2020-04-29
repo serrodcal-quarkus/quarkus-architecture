@@ -86,3 +86,4 @@ kind load docker-image jaegertracing/all-in-one:1.17.1
 
 * [Serrodcal](https://github.com/serrodcal)
 * [Lechowsky](https://github.com/lechowsky)
+* [Jualoppaz](https://github.com/jualoppaz)
