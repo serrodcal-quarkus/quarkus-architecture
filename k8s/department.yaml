@@ -34,7 +34,8 @@ spec:
     spec:
       containers:
         - name: department
-          image: serrodcal/department:1.0.1
+          #image: serrodcal/department:1.0.1
+          image: serrodcal/department-native:1.0.1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -44,11 +45,11 @@ spec:
               value: postgresql://database:5432/quarkus_test
           resources:
             limits:
-              memory: 1G
-              cpu: 1000m
+              memory: 500M
+              cpu: 500m
             requests:
-              memory: 1G
-              cpu: 1000m
+              memory: 250M
+              cpu: 250m
           readinessProbe:
             httpGet:
               path: /health/ready

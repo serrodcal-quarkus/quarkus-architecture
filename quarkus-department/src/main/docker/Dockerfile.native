@@ -4,6 +4,7 @@
 # Before building the docker image run:
 #
 # mvn package -Pnative -Dquarkus.native.container-build=true
+# ./mvnw clean package -Pnative -Dquarkus.native.container-runtime=docker
 #
 # Then, build the image with:
 #

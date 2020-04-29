@@ -3,8 +3,6 @@ package org.k8s.poc.service;
 import io.smallrye.mutiny.Uni;
 import org.eclipse.microprofile.faulttolerance.CircuitBreaker;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
-import org.k8s.poc.domain.Department;
-import org.k8s.poc.domain.Employee;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;

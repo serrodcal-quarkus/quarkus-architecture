@@ -31,16 +31,6 @@
   </dependencyManagement>
   <dependencies>
     <dependency>
-      <groupId>org.k8s.poc</groupId>
-      <artifactId>employee-quarkus</artifactId>
-      <version>1.0.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.k8s.poc</groupId>
-      <artifactId>department-quarkus</artifactId>
-      <version>1.0.0</version>
-    </dependency>
-    <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-smallrye-fault-tolerance</artifactId>
     </dependency>

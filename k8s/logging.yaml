@@ -46,8 +46,8 @@ spec:
               memory: 1G
               cpu: 1000m
             requests:
-              memory: 1G
-              cpu: 1000m
+              memory: 500M
+              cpu: 500m
 ---
 apiVersion: v1
 kind: Service
@@ -100,8 +100,8 @@ spec:
               memory: 1G
               cpu: 1000m
             requests:
-              memory: 1G
-              cpu: 1000m
+              memory: 500M
+              cpu: 500m
           volumeMounts:
           - name: logstash-config
             mountPath: /usr/share/logstash/pipeline/gelf.conf
@@ -168,8 +168,8 @@ spec:
               memory: 1G
               cpu: 1000m
             requests:
-              memory: 1G
-              cpu: 1000m
+              memory: 500M
+              cpu: 500m
           volumeMounts:
           - name: kibana-config
             mountPath: /usr/share/kibana/config/kibana.yml

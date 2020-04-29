@@ -79,8 +79,8 @@ spec:
               memory: 1G
               cpu: 1000m
             requests:
-              memory: 1G
-              cpu: 1000m
+              memory: 500M
+              cpu: 500m
           volumeMounts:
           - name: prometheus-config
             mountPath: /etc/prometheus/prometheus.yml
@@ -306,11 +306,11 @@ spec:
               protocol: TCP
           resources:
             limits:
-              memory: 1G
+              memory: 500M
               cpu: 1000m
             requests:
-              memory: 1G
-              cpu: 1000m
+              memory: 250M
+              cpu: 500m
           volumeMounts:
           - name: grafana-config
             mountPath: /etc/grafana/grafana.ini
@@ -319,7 +319,7 @@ spec:
             mountPath: /etc/grafana/provisioning/datasources
           - name: grafana-dashboard-provider
             mountPath: /etc/grafana/provisioning/dashboards
-          - name: employee-json-dashboard
+          - name: grafana-json-dashboard
             mountPath: /var/lib/grafana/dashboards
       volumes:
       - name: grafana-config
@@ -340,12 +340,16 @@ spec:
           items:
             - key: dashboard.yaml
               path: dashboard.yaml
-      - name: employee-json-dashboard
+      - name: grafana-json-dashboard
         configMap:
           name: grafana-cm
           items:
             - key: employee.json
               path: employee.json
+            - key: department.json
+              path: department.json
+            - key: hr.json
+              path: hr.json
             - key: jvm.json
               path: jvm.json
             - key: k8s.json
@@ -388,7 +392,6 @@ data:
       "annotations": {
         "list": [
           {
-            "$$hashKey": "object:130",
             "builtIn": 1,
             "datasource": "-- Grafana --",
             "enable": true,
@@ -399,36 +402,128 @@ data:
           }
         ]
       },
+      "description": "Java metrics exposed with Micrometer",
       "editable": true,
-      "gnetId": null,
+      "gnetId": 3308,
       "graphTooltip": 0,
+      "id": 5,
       "links": [],
       "panels": [
         {
-          "aliasColors": {},
-          "bars": false,
           "cacheTimeout": null,
-          "dashLength": 10,
-          "dashes": false,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
           "datasource": "Prometheus",
-          "fill": 1,
-          "fillGradient": 0,
+          "decimals": null,
+          "description": "The uptime of the Java virtual machine",
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
           "gridPos": {
-            "h": 8,
-            "w": 12,
+            "h": 5,
+            "w": 24,
             "x": 0,
             "y": 0
           },
+          "height": "",
+          "id": 1,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "pluginVersion": "6.7.2",
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "up{app=\"employee\"}",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "",
+              "refId": "A",
+              "step": 240
+            }
+          ],
+          "thresholds": "",
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Process Uptime",
+          "type": "singlestat",
+          "valueFontSize": "200%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "description": "Count of servlet requests",
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 9,
+            "w": 24,
+            "x": 0,
+            "y": 5
+          },
           "hiddenSeries": false,
-          "id": 6,
+          "id": 27,
           "legend": {
-            "avg": false,
-            "current": false,
-            "max": false,
-            "min": false,
+            "alignAsTable": true,
+            "avg": true,
+            "current": true,
+            "max": true,
+            "min": true,
             "show": true,
             "total": false,
-            "values": false
+            "values": true
           },
           "lines": true,
           "linewidth": 1,
@@ -438,8 +533,7 @@ data:
             "dataLinks": []
           },
           "percentage": false,
-          "pluginVersion": "6.7.2",
-          "pointradius": 2,
+          "pointradius": 5,
           "points": false,
           "renderer": "flot",
           "seriesOverrides": [],
@@ -448,17 +542,50 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "up{instance=\"employee:8080\",job=\"prometheus\"}",
+              "expr": "application_org_k8s_poc_resource_EmployeeResource_checksGetEmployees_rate_per_second{app=\"employee\"}",
+              "format": "time_series",
               "interval": "",
-              "legendFormat": "",
-              "refId": "A"
+              "intervalFactor": 2,
+              "legendFormat": "GET - /api/v1/employee",
+              "refId": "A",
+              "step": 30
+            },
+            {
+              "expr": "application_org_k8s_poc_resource_EmployeeResource_checksGetEmployee_rate_per_second{app=\"employee\"}",
+              "interval": "",
+              "legendFormat": "GET - /api/v1/employee/{id}",
+              "refId": "B"
+            },
+            {
+              "expr": "application_org_k8s_poc_resource_EmployeeResource_checksCreateEmployee_rate_per_second{app=\"employee\"}",
+              "interval": "",
+              "legendFormat": "POST - /api/v1/employee",
+              "refId": "C"
+            },
+            {
+              "expr": "application_org_k8s_poc_resource_EmployeeResource_checksUpdateEmployee_rate_per_second{app=\"employee\"}",
+              "interval": "",
+              "legendFormat": "PUT - /api/v1/employee",
+              "refId": "D"
+            },
+            {
+              "expr": "application_org_k8s_poc_resource_EmployeeResource_checksDeleteEmployee_rate_per_second{app=\"employee\"}",
+              "interval": "",
+              "legendFormat": "DELETE - /api/v1/employee",
+              "refId": "E"
+            },
+            {
+              "expr": "application_org_k8s_poc_resource_EmployeeResource_checksGetEmployeesByDept_rate_per_second{app=\"employee\"}",
+              "interval": "",
+              "legendFormat": "GET - /api/v1/employee/department/{deptId}",
+              "refId": "F"
             }
           ],
           "thresholds": [],
           "timeFrom": null,
           "timeRegions": [],
           "timeShift": null,
-          "title": "Up",
+          "title": "HTTP Requests Rate per Second",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -496,85 +623,699 @@ data:
           }
         },
         {
+          "cacheTimeout": null,
+          "datasource": "Prometheus",
+          "description": "Timer of servlet requests",
+          "gridPos": {
+            "h": 9,
+            "w": 24,
+            "x": 0,
+            "y": 14
+          },
+          "id": 28,
+          "links": [],
+          "options": {
+            "displayMode": "gradient",
+            "fieldOptions": {
+              "calcs": [
+                "last"
+              ],
+              "defaults": {
+                "mappings": [],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    }
+                  ]
+                }
+              },
+              "overrides": [],
+              "values": false
+            },
+            "orientation": "vertical",
+            "showUnfilled": true
+          },
+          "pluginVersion": "6.7.2",
+          "targets": [
+            {
+              "expr": "application_org_k8s_poc_resource_EmployeeResource_countGetEmployees_total{app=\"employee\"}",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "Get Employees",
+              "refId": "A",
+              "step": 30
+            },
+            {
+              "expr": "application_org_k8s_poc_resource_EmployeeResource_countGetEmployee_total{app=\"employee\"}",
+              "interval": "",
+              "legendFormat": "Get Employee",
+              "refId": "B"
+            },
+            {
+              "expr": "application_org_k8s_poc_resource_EmployeeResource_countCreateEmployee_total{app=\"employee\"}",
+              "interval": "",
+              "legendFormat": "Create Employee",
+              "refId": "C"
+            },
+            {
+              "expr": "application_org_k8s_poc_resource_EmployeeResource_countUpdateEmployee_total{app=\"employee\"}",
+              "interval": "",
+              "legendFormat": "Update Employee",
+              "refId": "D"
+            },
+            {
+              "expr": "application_org_k8s_poc_resource_EmployeeResource_countDeleteEmployee_total{app=\"employee\"}",
+              "interval": "",
+              "legendFormat": "Delete Employee",
+              "refId": "E"
+            },
+            {
+              "expr": "application_org_k8s_poc_resource_EmployeeResource_countGetEmployeesByDept_total{app=\"employee\"}",
+              "interval": "",
+              "legendFormat": "Get Employees by Dept",
+              "refId": "F"
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "HTTP Requests Counter",
+          "type": "bargauge"
+        }
+      ],
+      "refresh": "5s",
+      "schemaVersion": 22,
+      "style": "dark",
+      "tags": [
+        "java",
+        "micrometer"
+      ],
+      "templating": {
+        "list": []
+      },
+      "time": {
+        "from": "now-15m",
+        "to": "now"
+      },
+      "timepicker": {
+        "refresh_intervals": [
+          "5s",
+          "10s",
+          "30s",
+          "1m",
+          "5m",
+          "15m",
+          "30m",
+          "1h",
+          "2h",
+          "1d"
+        ],
+        "time_options": [
+          "5m",
+          "15m",
+          "1h",
+          "6h",
+          "12h",
+          "24h",
+          "2d",
+          "7d",
+          "30d"
+        ]
+      },
+      "timezone": "",
+      "title": "Employee HTTP Micrometer",
+      "uid": "V-CmuneWz",
+      "variables": {
+        "list": []
+      },
+      "version": 2
+    }
+  department.json: |
+    {
+       "annotations":{
+          "list":[
+             {
+                "builtIn":1,
+                "datasource":"-- Grafana --",
+                "enable":true,
+                "hide":true,
+                "iconColor":"rgba(0, 211, 255, 1)",
+                "name":"Annotations & Alerts",
+                "type":"dashboard"
+             }
+          ]
+       },
+       "description":"Java metrics exposed with Micrometer",
+       "editable":true,
+       "gnetId":3308,
+       "graphTooltip":0,
+       "id":5,
+       "links":[
+
+       ],
+       "panels":[
+          {
+             "cacheTimeout":null,
+             "colorBackground":false,
+             "colorValue":false,
+             "colors":[
+                "rgba(245, 54, 54, 0.9)",
+                "rgba(237, 129, 40, 0.89)",
+                "rgba(50, 172, 45, 0.97)"
+             ],
+             "datasource":"Prometheus",
+             "decimals":null,
+             "description":"The uptime of the Java virtual machine",
+             "format":"none",
+             "gauge":{
+                "maxValue":100,
+                "minValue":0,
+                "show":false,
+                "thresholdLabels":false,
+                "thresholdMarkers":true
+             },
+             "gridPos":{
+                "h":5,
+                "w":24,
+                "x":0,
+                "y":0
+             },
+             "height":"",
+             "id":1,
+             "interval":null,
+             "links":[
+
+             ],
+             "mappingType":1,
+             "mappingTypes":[
+                {
+                   "name":"value to text",
+                   "value":1
+                },
+                {
+                   "name":"range to text",
+                   "value":2
+                }
+             ],
+             "maxDataPoints":100,
+             "nullPointMode":"connected",
+             "nullText":null,
+             "pluginVersion":"6.7.2",
+             "postfix":"",
+             "postfixFontSize":"50%",
+             "prefix":"",
+             "prefixFontSize":"50%",
+             "rangeMaps":[
+                {
+                   "from":"null",
+                   "text":"N/A",
+                   "to":"null"
+                }
+             ],
+             "sparkline":{
+                "fillColor":"rgba(31, 118, 189, 0.18)",
+                "full":false,
+                "lineColor":"rgb(31, 120, 193)",
+                "show":false
+             },
+             "tableColumn":"",
+             "targets":[
+                {
+                   "expr":"up{app=\"department\"}",
+                   "format":"time_series",
+                   "interval":"",
+                   "intervalFactor":2,
+                   "legendFormat":"",
+                   "refId":"A",
+                   "step":240
+                }
+             ],
+             "thresholds":"",
+             "timeFrom":null,
+             "timeShift":null,
+             "title":"Process Uptime",
+             "type":"singlestat",
+             "valueFontSize":"200%",
+             "valueMaps":[
+                {
+                   "op":"=",
+                   "text":"N/A",
+                   "value":"null"
+                }
+             ],
+             "valueName":"current"
+          },
+          {
+             "aliasColors":{
+
+             },
+             "bars":false,
+             "dashLength":10,
+             "dashes":false,
+             "datasource":"Prometheus",
+             "description":"Count of servlet requests",
+             "fill":1,
+             "fillGradient":0,
+             "gridPos":{
+                "h":9,
+                "w":24,
+                "x":0,
+                "y":5
+             },
+             "hiddenSeries":false,
+             "id":27,
+             "legend":{
+                "alignAsTable":true,
+                "avg":true,
+                "current":true,
+                "max":true,
+                "min":true,
+                "show":true,
+                "total":false,
+                "values":true
+             },
+             "lines":true,
+             "linewidth":1,
+             "links":[
+
+             ],
+             "nullPointMode":"null",
+             "options":{
+                "dataLinks":[
+
+                ]
+             },
+             "percentage":false,
+             "pointradius":5,
+             "points":false,
+             "renderer":"flot",
+             "seriesOverrides":[
+
+             ],
+             "spaceLength":10,
+             "stack":false,
+             "steppedLine":false,
+             "targets":[
+                {
+                   "expr":"application_org_k8s_poc_resource_DepartmentResource_checksGetDepartments_rate_per_second{app=\"department\"}",
+                   "format":"time_series",
+                   "interval":"",
+                   "intervalFactor":2,
+                   "legendFormat":"GET - /api/v1/department",
+                   "refId":"A",
+                   "step":30
+                },
+                {
+                   "expr":"application_org_k8s_poc_resource_DepartmentResource_checksGetDepartment_rate_per_second{app=\"department\"}",
+                   "interval":"",
+                   "legendFormat":"GET - /api/v1/department/{id}",
+                   "refId":"B"
+                },
+                {
+                   "expr":"application_org_k8s_poc_resource_DepartmentResource_checksCreateDepartment_rate_per_second{app=\"department\"}",
+                   "interval":"",
+                   "legendFormat":"POST - /api/v1/department",
+                   "refId":"C"
+                },
+                {
+                   "expr":"application_org_k8s_poc_resource_DepartmentResource_checksUpdateDepartment_rate_per_second{app=\"department\"}",
+                   "interval":"",
+                   "legendFormat":"PUT - /api/v1/department",
+                   "refId":"D"
+                },
+                {
+                   "expr":"application_org_k8s_poc_resource_DepartmentResource_checksDeleteDepartment_rate_per_second{app=\"department\"}",
+                   "interval":"",
+                   "legendFormat":"DELETE - /api/v1/department",
+                   "refId":"E"
+                }
+             ],
+             "thresholds":[
+
+             ],
+             "timeFrom":null,
+             "timeRegions":[
+
+             ],
+             "timeShift":null,
+             "title":"HTTP Requests Rate per Second",
+             "tooltip":{
+                "shared":true,
+                "sort":0,
+                "value_type":"individual"
+             },
+             "type":"graph",
+             "xaxis":{
+                "buckets":null,
+                "mode":"time",
+                "name":null,
+                "show":true,
+                "values":[
+
+                ]
+             },
+             "yaxes":[
+                {
+                   "format":"short",
+                   "label":null,
+                   "logBase":1,
+                   "max":null,
+                   "min":null,
+                   "show":true
+                },
+                {
+                   "format":"short",
+                   "label":null,
+                   "logBase":1,
+                   "max":null,
+                   "min":null,
+                   "show":true
+                }
+             ],
+             "yaxis":{
+                "align":false,
+                "alignLevel":null
+             }
+          },
+          {
+             "cacheTimeout":null,
+             "datasource":"Prometheus",
+             "description":"Timer of servlet requests",
+             "gridPos":{
+                "h":9,
+                "w":24,
+                "x":0,
+                "y":14
+             },
+             "id":28,
+             "links":[
+
+             ],
+             "options":{
+                "displayMode":"gradient",
+                "fieldOptions":{
+                   "calcs":[
+                      "last"
+                   ],
+                   "defaults":{
+                      "mappings":[
+
+                      ],
+                      "thresholds":{
+                         "mode":"absolute",
+                         "steps":[
+                            {
+                               "color":"green",
+                               "value":null
+                            }
+                         ]
+                      }
+                   },
+                   "overrides":[
+
+                   ],
+                   "values":false
+                },
+                "orientation":"vertical",
+                "showUnfilled":true
+             },
+             "pluginVersion":"6.7.2",
+             "targets":[
+                {
+                   "expr":"application_org_k8s_poc_resource_DepartmentResource_countGetDepartments_total{app=\"department\"}",
+                   "format":"time_series",
+                   "interval":"",
+                   "intervalFactor":1,
+                   "legendFormat":"Get Departments",
+                   "refId":"A",
+                   "step":30
+                },
+                {
+                   "expr":"application_org_k8s_poc_resource_DepartmentResource_countGetDepartment_total{app=\"department\"}",
+                   "interval":"",
+                   "legendFormat":"Get Department",
+                   "refId":"B"
+                },
+                {
+                   "expr":"application_org_k8s_poc_resource_DepartmentResource_countCreateDepartment_total{app=\"department\"}",
+                   "interval":"",
+                   "legendFormat":"Create Department",
+                   "refId":"C"
+                },
+                {
+                   "expr":"application_org_k8s_poc_resource_DepartmentResource_countUpdateDepartment_total{app=\"department\"}",
+                   "interval":"",
+                   "legendFormat":"Update Department",
+                   "refId":"D"
+                },
+                {
+                   "expr":"application_org_k8s_poc_resource_DepartmentResource_countDeleteDepartment_total{app=\"department\"}",
+                   "interval":"",
+                   "legendFormat":"Delete Department",
+                   "refId":"E"
+                }
+             ],
+             "timeFrom":null,
+             "timeShift":null,
+             "title":"HTTP Requests Counter",
+             "type":"bargauge"
+          }
+       ],
+       "refresh":"5s",
+       "schemaVersion":22,
+       "style":"dark",
+       "tags":[
+          "java",
+          "micrometer"
+       ],
+       "templating":{
+          "list":[
+
+          ]
+       },
+       "time":{
+          "from":"now-15m",
+          "to":"now"
+       },
+       "timepicker":{
+          "refresh_intervals":[
+             "5s",
+             "10s",
+             "30s",
+             "1m",
+             "5m",
+             "15m",
+             "30m",
+             "1h",
+             "2h",
+             "1d"
+          ],
+          "time_options":[
+             "5m",
+             "15m",
+             "1h",
+             "6h",
+             "12h",
+             "24h",
+             "2d",
+             "7d",
+             "30d"
+          ]
+       },
+       "timezone":"",
+       "title":"Department HTTP Micrometer",
+       "uid":"V-CmuneWd",
+       "variables":{
+          "list":[
+
+          ]
+       },
+       "version":2
+    }
+  hr.json: |
+    {
+      "annotations": {
+        "list": [
+          {
+            "builtIn": 1,
+            "datasource": "-- Grafana --",
+            "enable": true,
+            "hide": true,
+            "iconColor": "rgba(0, 211, 255, 1)",
+            "name": "Annotations & Alerts",
+            "type": "dashboard"
+          }
+        ]
+      },
+      "description": "Java metrics exposed with Micrometer",
+      "editable": true,
+      "gnetId": 3308,
+      "graphTooltip": 0,
+      "id": 5,
+      "links": [],
+      "panels": [
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "datasource": "Prometheus",
+          "decimals": null,
+          "description": "The uptime of the Java virtual machine",
+          "format": "none",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": false,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 24,
+            "x": 0,
+            "y": 0
+          },
+          "height": "",
+          "id": 1,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "pluginVersion": "6.7.2",
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "tableColumn": "",
+          "targets": [
+            {
+              "expr": "up{app=\"hr\"}",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "",
+              "refId": "A",
+              "step": 240
+            }
+          ],
+          "thresholds": "",
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Process Uptime",
+          "type": "singlestat",
+          "valueFontSize": "200%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
           "aliasColors": {},
           "bars": false,
           "dashLength": 10,
           "dashes": false,
           "datasource": "Prometheus",
+          "description": "Count of servlet requests",
           "fill": 1,
           "fillGradient": 0,
           "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 12,
-            "y": 0
+            "h": 9,
+            "w": 24,
+            "x": 0,
+            "y": 5
           },
           "hiddenSeries": false,
-          "id": 2,
+          "id": 27,
           "legend": {
-            "avg": false,
-            "current": false,
-            "max": false,
-            "min": false,
+            "alignAsTable": true,
+            "avg": true,
+            "current": true,
+            "max": true,
+            "min": true,
             "show": true,
             "total": false,
-            "values": false
+            "values": true
           },
           "lines": true,
           "linewidth": 1,
+          "links": [],
           "nullPointMode": "null",
           "options": {
             "dataLinks": []
           },
           "percentage": false,
-          "pointradius": 2,
+          "pointradius": 5,
           "points": false,
           "renderer": "flot",
-          "seriesOverrides": [
-            {
-              "alias": "application_org_k8s_poc_resource_EmployeeResource_checksGetEmployees_mean_seconds"
-            }
-          ],
+          "seriesOverrides": [],
           "spaceLength": 10,
           "stack": false,
           "steppedLine": false,
           "targets": [
             {
-              "expr": "application_org_k8s_poc_resource_EmployeeResource_checksGetEmployees_mean_seconds",
+              "expr": "application_org_k8s_poc_resource_HRResource_checksAssignEmployeeToDept_rate_per_second{app=\"hr\"}",
+              "format": "time_series",
               "interval": "",
-              "legendFormat": "",
-              "refId": "A"
+              "intervalFactor": 2,
+              "legendFormat": "POST - /employee/{employeeId}/assign/{deptId}",
+              "refId": "A",
+              "step": 30
             },
             {
-              "expr": "application_org_k8s_poc_resource_EmployeeResource_checksGetEmployee_mean_seconds",
+              "expr": "application_org_k8s_poc_resource_HRResource_checksChangeDeptOfEmployee_rate_per_second{app=\"hr\"}",
               "interval": "",
-              "legendFormat": "",
+              "legendFormat": "PUT - /employee/{employeeId}/assign/{deptId}",
               "refId": "B"
             },
             {
-              "expr": "application_org_k8s_poc_resource_EmployeeResource_checksCreateEmployee_mean_seconds",
+              "expr": "application_org_k8s_poc_resource_HRResource_checksUnassignEmployeeToDept_rate_per_second{app=\"hr\"}",
               "interval": "",
-              "legendFormat": "",
+              "legendFormat": "DELETE - /{id}",
               "refId": "C"
-            },
-            {
-              "expr": "application_org_k8s_poc_resource_EmployeeResource_checksUpdateEmployee_mean_seconds",
-              "interval": "",
-              "legendFormat": "",
-              "refId": "D"
-            },
-            {
-              "expr": "application_org_k8s_poc_resource_EmployeeResource_checksDeleteEmployee_mean_seconds",
-              "interval": "",
-              "legendFormat": "",
-              "refId": "E"
             }
           ],
           "thresholds": [],
           "timeFrom": null,
           "timeRegions": [],
           "timeShift": null,
-          "title": "Mean time to response requests",
+          "title": "HTTP Requests Rate per Second",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -610,17 +1351,85 @@ data:
             "align": false,
             "alignLevel": null
           }
+        },
+        {
+          "cacheTimeout": null,
+          "datasource": "Prometheus",
+          "description": "Timer of servlet requests",
+          "gridPos": {
+            "h": 9,
+            "w": 24,
+            "x": 0,
+            "y": 14
+          },
+          "id": 28,
+          "links": [],
+          "options": {
+            "displayMode": "gradient",
+            "fieldOptions": {
+              "calcs": [
+                "last"
+              ],
+              "defaults": {
+                "mappings": [],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    }
+                  ]
+                }
+              },
+              "overrides": [],
+              "values": false
+            },
+            "orientation": "vertical",
+            "showUnfilled": true
+          },
+          "pluginVersion": "6.7.2",
+          "targets": [
+            {
+              "expr": "application_org_k8s_poc_resource_HRResource_countAssignEmployeeToDept_total{app=\"hr\"}",
+              "format": "time_series",
+              "interval": "",
+              "intervalFactor": 1,
+              "legendFormat": "Assign Employee to Dept",
+              "refId": "A",
+              "step": 30
+            },
+            {
+              "expr": "application_org_k8s_poc_resource_HRResource_countChangeDeptOfEmployee_total{app=\"hr\"}",
+              "interval": "",
+              "legendFormat": "Change Dept of Employee",
+              "refId": "B"
+            },
+            {
+              "expr": "application_org_k8s_poc_resource_HRResource_countUnassignEmployeeToDept_total{app=\"hr\"}",
+              "interval": "",
+              "legendFormat": "Unassign Employee from Detp",
+              "refId": "C"
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "HTTP Requests Counter",
+          "type": "bargauge"
         }
       ],
       "refresh": "5s",
       "schemaVersion": 22,
       "style": "dark",
-      "tags": [],
+      "tags": [
+        "java",
+        "micrometer"
+      ],
       "templating": {
         "list": []
       },
       "time": {
-        "from": "now-5m",
+        "from": "now-15m",
         "to": "now"
       },
       "timepicker": {
@@ -635,15 +1444,26 @@ data:
           "1h",
           "2h",
           "1d"
+        ],
+        "time_options": [
+          "5m",
+          "15m",
+          "1h",
+          "6h",
+          "12h",
+          "24h",
+          "2d",
+          "7d",
+          "30d"
         ]
       },
       "timezone": "",
-      "title": "Employee Dashboard",
-      "uid": "wd_Y7_jWz",
+      "title": "HR HTTP Micrometer",
+      "uid": "V-CmuneWf",
       "variables": {
         "list": []
       },
-      "version": 1
+      "version": 3
     }
   jvm.json: |
     {
