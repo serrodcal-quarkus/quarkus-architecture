@@ -75,12 +75,12 @@ spec:
             - containerPort: 9090
               protocol: TCP
           resources:
-            limits:
-              memory: 1G
-              cpu: 1000m
             requests:
               memory: 500M
               cpu: 500m
+            limits:
+              memory: 1G
+              cpu: 1000m
           volumeMounts:
           - name: prometheus-config
             mountPath: /etc/prometheus/prometheus.yml
@@ -305,12 +305,12 @@ spec:
             - containerPort: 3000
               protocol: TCP
           resources:
-            limits:
-              memory: 500M
-              cpu: 1000m
             requests:
               memory: 250M
               cpu: 500m
+            limits:
+              memory: 500M
+              cpu: 1000m
           volumeMounts:
           - name: grafana-config
             mountPath: /etc/grafana/grafana.ini

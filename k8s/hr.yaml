@@ -46,12 +46,12 @@ spec:
             - name: DEPARTMENT_URL
               value: http://department:8080/api/v1
           resources:
-            limits:
-              memory: 500M
-              cpu: 500m
             requests:
-              memory: 250M
-              cpu: 250m
+              memory: 350M
+              cpu: 350m
+            limits:
+              memory: 350M
+              cpu: 350m
           readinessProbe:
             httpGet:
               path: /health/ready

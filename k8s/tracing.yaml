@@ -77,9 +77,9 @@ spec:
             - containerPort: 14269
               protocol: TCP
           resources:
-            limits:
-              memory: 500M
-              cpu: 1000m
             requests:
               memory: 250M
               cpu: 500m
+            limits:
+              memory: 500M
+              cpu: 1000m

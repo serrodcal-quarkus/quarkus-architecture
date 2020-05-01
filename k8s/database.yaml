@@ -40,12 +40,12 @@ spec:
             - name: POSTGRES_DB
               value: quarkus_test
           resources:
-            limits:
-              memory: 1G
-              cpu: 1000m
             requests:
-              memory: 1G
-              cpu: 1000m
+              memory: 300M
+              cpu: 300m
+            limits:
+              memory: 300M
+              cpu: 300m
           readinessProbe:
             exec:
               command: ["psql", "-w", "-U", "quarkus_test", "-d", "quarkus_test", "-c", "SELECT 1"]
