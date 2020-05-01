@@ -11,14 +11,14 @@
       <b-row>
         <b-col>
           <h1>Department</h1>
-          <b-button variant="info" class="mb-2 float-right" @click="create('Create Department', $event.target)">New Department</b-button>
+          <b-button variant="info" class="mb-2 float-right" @click="department(null, 'Create Department', $event.target)">New Department</b-button>
           <div>
             <b-table hover :items="depts" :fields="fields_depts">
               <template v-slot:cell(name)="row">
                 {{ row.value }}
               </template>
               <template v-slot:cell(actions)="row">
-                <b-button size="sm" variant="info" class="mr-1" @click="update(row.item, 'Update Department', $event.target)">
+                <b-button size="sm" variant="info" class="mr-1" @click="department(row.item, 'Update Department', $event.target)">
                   <b-icon icon="pencil-square"></b-icon>
                 </b-button>
                 <b-button size="sm" variant="danger" class="mr-1" @click="deleteDepartment(row.item.id)">
@@ -30,7 +30,7 @@
         </b-col>
         <b-col>
           <h1>Employee</h1>
-          <b-button variant="info" class="mb-2 float-right" @click="create('Create Employee', $event.target)">New Employee</b-button>
+          <b-button variant="info" class="mb-2 float-right" @click="employee(null, 'Create Employee', $event.target)">New Employee</b-button>
           <div>
             <b-table hover :items="empls" :fields="fields_empls">
               <template v-slot:cell(name)="row">
@@ -41,7 +41,7 @@
                 {{ row.value }}
               </template>
               <template v-slot:cell(actions)="row">
-                <b-button size="sm" variant="info" class="mr-1" @click="update(row.item, 'Update Employee', $event.target)">
+                <b-button size="sm" variant="info" class="mr-1" @click="employee(row.item, 'Update Employee', $event.target)">
                   <b-icon icon="pencil-square"></b-icon>
                 </b-button>
                 <b-button size="sm" variant="danger" class="mr-1" @click="deleteEmployee(row.item.id)">
@@ -52,20 +52,34 @@
           </div>
         </b-col>
       </b-row>
-      <b-modal :id="formModal.id" :title="formModal.title" ok-only @hide="resetFormModal">
-        <form ref="formModal"> <!-- @submit.stop.prevent="handleSubmit" -->
+      <b-modal :id="employeeModal.id" :title="employeeModal.title" hide-footer @hide="resetEmployeeModal">
+        <form ref="employeeModal"> <!-- @submit.stop.prevent="handleSubmit" -->
           <b-form-group
-            :state="nameState"
             label="Name"
             label-for="name-input"
             invalid-feedback="Name is required">
             <b-form-input
               id="name-input"
-              v-model="name"
-              :state="nameState"
+              v-model="formEmployee.name"
               required
             ></b-form-input>
           </b-form-group>
+          <b-form-group
+            label="Department"
+            label-for="department-input"
+            invalid-feedback="Name is required">
+            <b-form-select
+              id="department-input"
+              v-model="formEmployee.deptId"
+              required
+            >
+              <b-form-select-option :value="null">Please select an option</b-form-select-option>
+              <b-form-select-option v-for="dept in depts" :value="dept.id">{{ dept.name }}</b-form-select-option>
+            </b-form-select>
+          </b-form-group>
+          <b-button type="submit" variant="primary" v-if="!isUpdatedMode">Create</b-button>
+          <b-button type="submit" variant="primary" v-if="isUpdatedMode" @click="updateEmployee()">Update</b-button>
+          <b-button type="reset" variant="danger">Reset</b-button>
         </form>
       </b-modal>
     </b-container>
@@ -87,6 +101,7 @@ export default {
     },
     data() {
       return {
+        isUpdatedMode: false,
         fields_empls: [
           { key: 'id', label: 'ID'},
           { key: 'name', label: 'Full Name'},
@@ -98,41 +113,71 @@ export default {
           { key: 'name', label: 'Full Name'},
           { key: 'actions', label: 'Actions' }
         ],
-        formModal: {
-          id: 'form-modal',
+        formEmployee: {
+          name: "",
+          deptId: null
+        },
+        formDepartment: {
+          name: ""
+        },
+        employeeModal: {
+          id: 'employee-modal',
+          title: '',
+          content: ''
+        },
+        departmentModal: {
+          id: 'department-modal',
           title: '',
           content: ''
         }
       }
     },
     methods: {
-      getEmployees(empls, depts) {
-        const deptsParsed = depts.reduce(function(d) {
-          return { [d.id]: d.name };
-        });
-        const emplsParsed = empls.map(function(e) {
-           if (deptsParsed && e.deptId && deptsParsed[e.deptId]) {
-             e.dept = deptsParsed[e.deptId];
-             return e;
-           } else {
-             e.dept = "Unassigned";
-             return e;
-           }
-        });
-        return emplsParsed
+      loadPage() {
+        this.depts = this.$axios.$get('http://localhost:8080/api/v1/department')
+        this.empls = this.$axios.$get('http://localhost:8080/api/v1/employee')
       },
-      create(index, button) {
-        this.formModal.title = `${index}`
-        this.$root.$emit('bv::show::modal', this.formModal.id, button)
+      updateEmployee() {
+        debugger
+        this.$axios({
+            url: 'http://localhost:8080/api/v1/employee',
+            method: 'put',
+            timeout: 8000,
+            data: {
+              id: this.formEmployee.id,
+              deptId: this.formEmployee.deptId,
+              name: this.formEmployee.name
+            }
+        })
+         .then(data => {
+            this.loadPage();
+         })
+         .catch(err => {
+             console.log(err);
+          });
       },
-      update(item, index, button) {
-        this.formModal.title = `${index}`
-        this.formModal.content = JSON.stringify(item, null, 2)
-        this.$root.$emit('bv::show::modal', this.formModal.id, button)
+      employee(item, index, button) {
+        this.isUpdatedMode = false
+        this.employeeModal.title = `${index}`
+        if (item && item.id) {
+          this.formEmployee.name = item.name
+          this.formEmployee.deptId = item.deptId
+          this.isUpdatedMode = true
+        }
+        this.$root.$emit('bv::show::modal', this.employeeModal.id, button)
       },
-      resetFormModal() {
-        this.formModal.title = ''
-        this.formModal.content = ''
+      department(item, index, button) {
+        this.departmentModal.title = `${index}`
+        this.departmentModal.content = JSON.stringify(item, null, 2)
+        this.$root.$emit('bv::show::modal', this.departmentModal.id, button)
+      },
+      resetEmployeeModal() {
+        this.employeeModal.title = ''
+        this.employeeModal.content = ''
+      },
+      resetDepartmentModal() {
+        this.departmentModal.title = ''
+        this.departmentModal.content = ''
       },
       async deleteEmployee(id) {
         let res = await this.$axios({

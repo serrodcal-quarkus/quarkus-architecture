@@ -26,6 +26,8 @@ Create a Kubernetes local cluster with:
 kind create cluster --config kind/kind-ha-config.yaml
 ```
 
+**Note**: Use `--image kindest/node:v1.18.2` if you want to choose different version of k8s.
+
 ## Deploying all the stack
 
 Deploy the application with:

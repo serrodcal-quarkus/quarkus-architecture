@@ -99,6 +99,47 @@ data:
     global:
       scrape_interval:     15s
     scrape_configs:
+      - job_name: 'etcd'
+
+        kubernetes_sd_configs:
+        - role: pod
+
+        scheme: http
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_namespace]
+            action: keep
+            regex: 'kube-system'
+          - source_labels: [__meta_kubernetes_pod_label_component]
+            action: keep
+            regex: 'etcd-scraper-proxy'
+          - action: labelmap
+            regex: __meta_kubernetes_pod_label_(.+)
+
+      - job_name: 'kubelet'
+
+        kubernetes_sd_configs:
+        - role: node
+
+        scheme: https
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+          # Kubelet certs don't have any fixed IP SANs
+          insecure_skip_verify: true
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+
+        relabel_configs:
+        - action: labelmap
+          regex: __meta_kubernetes_node_label_(.+)
+        - replacement: 'lens-metrics'
+          target_label: kubernetes_namespace
+
+        metric_relabel_configs:
+        - source_labels:
+            - namespace
+          action: replace
+          regex: (.+)
+          target_label: kubernetes_namespace
+
       - job_name: 'kubernetes-apiservers'
 
         kubernetes_sd_configs:
