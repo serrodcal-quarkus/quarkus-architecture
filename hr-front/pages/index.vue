@@ -77,7 +77,7 @@
               <b-form-select-option v-for="dept in depts" :value="dept.id">{{ dept.name }}</b-form-select-option>
             </b-form-select>
           </b-form-group>
-          <b-button type="submit" variant="primary" v-if="!isUpdatedMode">Create</b-button>
+          <b-button type="submit" variant="primary" v-if="!isUpdatedMode" @click="createEmployee()">Create</b-button>
           <b-button type="submit" variant="primary" v-if="isUpdatedMode" @click="updateEmployee()">Update</b-button>
           <b-button type="reset" variant="danger">Reset</b-button>
         </form>
@@ -95,8 +95,8 @@ Vue.use(BootstrapVueIcons)
 
 export default {
     async asyncData({ $axios }) {
-      const depts = await $axios.$get('http://localhost:8080/api/v1/department')
-      const empls = await $axios.$get('http://localhost:8080/api/v1/employee')
+      const depts = await $axios.$get('http://localhost/api/v1/department')
+      const empls = await $axios.$get('http://localhost/api/v1/employee')
       return { depts, empls }
     },
     data() {
@@ -134,23 +134,47 @@ export default {
     },
     methods: {
       loadPage() {
-        this.depts = this.$axios.$get('http://localhost:8080/api/v1/department')
-        this.empls = this.$axios.$get('http://localhost:8080/api/v1/employee')
+        this.depts = this.$axios.$get('http://localhost/api/v1/department')
+        this.empls = this.$axios.$get('http://localhost/api/v1/employee')
       },
-      updateEmployee() {
-        debugger
-        this.$axios({
-            url: 'http://localhost:8080/api/v1/employee',
-            method: 'put',
-            timeout: 8000,
+      createEmployee() {
+        const res = this.$axios({
+            url: 'http://localhost/api/v1/employee',
+            method: 'post',
+            headers: {'Content-Type': 'application/json'},
             data: {
-              id: this.formEmployee.id,
-              deptId: this.formEmployee.deptId,
-              name: this.formEmployee.name
+              name: this.formEmployee.name,
+              deptId: this.formEmployee.deptId
             }
         })
-         .then(data => {
-            this.loadPage();
+        .then(function (response) {
+           if (response.status === 200) {
+             console.log("Create Success")
+             loadPage()
+           } else {
+             console.log("a tomar por culo ya")
+           }
+         })
+         .catch(function (response) {
+           console.log(response);
+           resolve();
+         });
+      },
+      updateEmployee() {
+        this.$axios({
+            url: 'http://localhost/api/v1/employee',
+            method: 'put',
+            headers: {'Content-Type': 'application/json'},
+            data: {
+              id: this.formEmployee.id,
+              name: this.formEmployee.name,
+              deptId: this.formEmployee.deptId
+            }
+        })
+         .then(res => {
+            if (res.status == 200) {
+              this.loadPage();
+            }
          })
          .catch(err => {
              console.log(err);
@@ -181,13 +205,13 @@ export default {
       },
       async deleteEmployee(id) {
         let res = await this.$axios({
-            url: `http://localhost:8080/api/v1/employee/${id}`,
+            url: `http://localhost/api/v1/employee/${id}`,
             method: 'delete',
             timeout: 8000
         })
         if(res.status == 200){
           let res2 = await this.$axios({
-              url: 'http://localhost:8080/api/v1/employee',
+              url: 'http://localhost/api/v1/employee',
               method: 'get',
               timeout: 8000
           })
@@ -199,13 +223,13 @@ export default {
       },
       async deleteDepartment(id) {
         let res = await this.$axios({
-            url: `http://localhost:8080/api/v1/department/${id}`,
+            url: `http://localhost/api/v1/department/${id}`,
             method: 'delete',
             timeout: 8000
         })
         if(res.status == 200){
           let depts = await this.$axios({
-              url: 'http://localhost:8080/api/v1/department',
+              url: 'http://localhost/api/v1/department',
               method: 'get',
               timeout: 8000
           })

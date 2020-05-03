@@ -43,21 +43,12 @@ Just create the cluster with:
 kind create cluster --config kind/kind-ingress-config.yaml
 ```
 
-Then, deploy the Contour components:
-```
-kubectl apply -f https://projectcontour.io/quickstart/contour.yaml
-```
-
-Apply kind specific patches to forward the hostPorts to the ingress controller,
-set taint tolerations and schedule it to the custom labelled node:
-```
-kubectl patch daemonsets -n projectcontour envoy -p '{"spec":{"template":{"spec":{"nodeSelector":{"ingress-ready":"true"},"tolerations":[{"key":"node-role.kubernetes.io/master","operator":"Equal","effect":"NoSchedule"}]}}}}'
-```
-
-Install the ingress (NGINX):
+Then, Install the ingress (NGINX):
 ```
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml
 ```
+
+**Note**: Or if you prefer, use [Contour](https://kind.sigs.k8s.io/docs/user/ingress/#contour) instead.
 
 Use `ingress/ingress.yaml` file with:
 ```
@@ -70,6 +61,15 @@ Create a Multi-node Kubernetes local cluster with:
 ```
 kind create cluster --config kind/kind-ha-config.yaml
 ```
+
+### Enable multinode with ingress
+
+Create a Multi-node Kubernetes local cluster with:
+```
+kind create cluster --config kind/kind-ha-ingress-config.yaml
+```
+
+Finally, just follow the instruction above to set up Project Contour and NGINX Ingress Controller.
 
 ## Deploying all the stack
 
