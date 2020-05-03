@@ -74,12 +74,10 @@
           <b-form-group
             label="Department"
             label-for="department-input"
-            invalid-feedback="Name is required"
           >
             <b-form-select
               id="department-input"
               v-model="formEmployee.deptId"
-              required
             >
               <b-form-select-option :value="null">
                 Please select an option
@@ -183,7 +181,7 @@ export default {
       debugger
       this.$axios({
         url: process.env.API_URL + '/employee',
-        method: 'put',
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         data: {
           id: this.formEmployee.id,
