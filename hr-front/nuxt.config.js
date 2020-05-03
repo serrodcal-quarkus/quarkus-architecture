@@ -1,3 +1,5 @@
+// eslint-disable-next-line nuxt/no-cjs-in-config
+require('dotenv').config()
 
 export default {
   mode: 'spa',
@@ -34,7 +36,7 @@ export default {
   */
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
-    '@nuxtjs/eslint-module',
+    '@nuxtjs/eslint-module'
   ],
   /*
   ** Nuxt.js modules
@@ -45,7 +47,7 @@ export default {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     // Doc: https://github.com/nuxt-community/dotenv-module
-    '@nuxtjs/dotenv',
+    '@nuxtjs/dotenv'
   ],
   /*
   ** Axios module configuration
@@ -62,5 +64,8 @@ export default {
     */
     extend (config, ctx) {
     }
+  },
+  env: {
+    API_URL: process.env.API_URL
   }
 }
