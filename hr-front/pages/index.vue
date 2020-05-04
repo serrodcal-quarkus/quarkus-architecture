@@ -168,7 +168,7 @@ export default {
       })
       .then(function (response) {
         if (response.status === 200) {
-          console.log('Create Success')
+          this.$refs['formEmployee'].hide()
           this.loadPage()
         } else {
           console.log('Some error')
@@ -185,6 +185,7 @@ export default {
       })
       .then((res) => {
         if (res.status === 200) {
+          this.$refs['formEmployee'].hide()
           this.loadPage()
         } else {
           console.log('Some error')
@@ -205,7 +206,7 @@ export default {
       })
       .then(function (response) {
         if (response.status === 200) {
-          console.log('Create Success')
+          this.$refs['formDepartment'].hide()
           this.loadPage()
         } else {
           console.log('Some error')
@@ -227,6 +228,7 @@ export default {
       })
       .then((res) => {
         if (res.status === 200) {
+          this.$refs['formDepartment'].hide()
           this.loadPage()
         } else {
           console.log('Some error')

@@ -17,6 +17,19 @@ $ npm run start
 
 # generate static project
 $ npm run generate
+
+# generate static project for NGINX
+$ npm run build --spa
 ```
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+
+## NGINX
+
+For detailed explanation on how deploy on NGINX, check out [NGINX-proxy](https://nuxtjs.org/faq/nginx-proxy/).
+
+## Build Docker Image
+
+```bash
+$ docker build -f Dockerfile/Dockerfile -t serrodcal/hr-frontend-server:1.0.0-alpine .
+```

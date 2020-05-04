@@ -43,7 +43,6 @@ spec:
           - name: gateway-config
             mountPath: /etc/nginx/nginx.conf
             subPath: nginx.conf
-          # statics folder: /usr/share/nginx/html
       volumes:
       - name: gateway-config
         configMap:
@@ -91,6 +90,7 @@ data:
           listen 8080;
 
           # Lazy load proxy_pass and do check only when request comes in
+          set $frontend_upstream "http://frontend.default.svc.cluster.local:5000";
           set $employee_upstream "http://employee.default.svc.cluster.local:8080";
           set $department_upstream "http://department.default.svc.cluster.local:8080";
           set $hr_upstream "http://hr.default.svc.cluster.local:8080";
@@ -157,6 +157,13 @@ data:
 
           location /prometheus {
             proxy_pass $prometheus_upstream;
+          }
+
+          location / {
+            add_header 'Access-Control-Allow-Origin' '*';
+            add_header 'Access-Control-Allow-Methods' 'OPTIONS, GET, POST, PUT, DELETE';
+            add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range';
+            proxy_pass $frontend_upstream;
           }
 
         }
