@@ -59,26 +59,11 @@
       </b-row>
       <b-modal :id="employeeModal.id" :title="employeeModal.title" hide-footer @hide="resetEmployeeModal">
         <form ref="employeeModal">
-          <!-- @submit.stop.prevent="handleSubmit" -->
-          <b-form-group
-            label="Name"
-            label-for="name-input"
-            invalid-feedback="Name is required"
-          >
-            <b-form-input
-              id="name-input"
-              v-model="formEmployee.name"
-              required
-            />
+          <b-form-group label="Name" label-for="name-input" >
+            <b-form-input id="name-input" v-model="formEmployee.name"/>
           </b-form-group>
-          <b-form-group
-            label="Department"
-            label-for="department-input"
-          >
-            <b-form-select
-              id="department-input"
-              v-model="formEmployee.deptId"
-            >
+          <b-form-group label="Department" label-for="department-input">
+            <b-form-select id="department-input" v-model="formEmployee.deptId">
               <b-form-select-option :value="null">
                 Please select an option
               </b-form-select-option>
@@ -90,7 +75,23 @@
           <b-button v-if="!isUpdatedMode" type="submit" variant="primary" @click="createEmployee()">
             Create
           </b-button>
-          <b-button v-if="isUpdatedMode" variant="primary" @click="updateEmployee()">
+          <b-button v-if="isUpdatedMode" type="submit" variant="primary" @click="updateEmployee()">
+            Update
+          </b-button>
+          <b-button type="reset" variant="danger">
+            Reset
+          </b-button>
+        </form>
+      </b-modal>
+      <b-modal :id="departmentModal.id" :title="departmentModal.title" hide-footer @hide="resetDepartmentModal">
+        <form ref="departmentModal">
+          <b-form-group label="Name" label-for="name-input">
+            <b-form-input id="name-input" v-model="formDepartment.name"/>
+          </b-form-group>
+          <b-button v-if="!isUpdatedMode" type="submit" variant="primary" @click="createDepartment()">
+            Create
+          </b-button>
+          <b-button v-if="isUpdatedMode" type="submit" variant="primary" @click="updateDepartment()">
             Update
           </b-button>
           <b-button type="reset" variant="danger">
@@ -130,10 +131,12 @@ export default {
         { key: 'actions', label: 'Actions' }
       ],
       formEmployee: {
+        id: null,
         name: '',
         deptId: null
       },
       formDepartment: {
+        id: null,
         name: ''
       },
       employeeModal: {
@@ -163,45 +166,81 @@ export default {
           deptId: this.formEmployee.deptId
         }
       })
-        .then(function (response) {
-          if (response.status === 200) {
-            console.log('Create Success')
-            this.loadPage()
-          } else {
-            console.log('a tomar por culo ya')
-          }
-        })
-        .catch(function (response) {
-          console.log(response)
-          // resolve()
-        })
+      .then(function (response) {
+        if (response.status === 200) {
+          console.log('Create Success')
+          this.loadPage()
+        } else {
+          console.log('Some error')
+        }
+      })
+      .catch(function (response) {
+        console.log(response)
+      })
     },
     updateEmployee () {
-      // eslint-disable-next-line no-debugger
-      debugger
       this.$axios({
-        url: process.env.API_URL + '/employee',
+        url: process.env.API_URL + `/hr/employee/${this.formEmployee.id}/assign/${this.formEmployee.deptId}`,
+        method: 'PUT'
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          this.loadPage()
+        } else {
+          console.log('Some error')
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    },
+    createDepartment () {
+      this.$axios({
+        url: process.env.API_URL + '/department',
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: {
+          name: this.formDepartment.name
+        }
+      })
+      .then(function (response) {
+        if (response.status === 200) {
+          console.log('Create Success')
+          this.loadPage()
+        } else {
+          console.log('Some error')
+        }
+      })
+      .catch(function (response) {
+        console.log(response)
+      })
+    },
+    updateDepartment () {
+      this.$axios({
+        url: process.env.API_URL + '/department',
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         data: {
-          id: this.formEmployee.id,
-          name: this.formEmployee.name,
-          deptId: this.formEmployee.deptId
+          id: this.formDepartment.id,
+          name: this.formDepartment.name
         }
       })
-        .then((res) => {
-          if (res.status === 200) {
-            this.loadPage()
-          }
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+      .then((res) => {
+        if (res.status === 200) {
+          this.loadPage()
+        } else {
+          console.log('Some error')
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      })
     },
     employee (item, index, button) {
       this.isUpdatedMode = false
       this.employeeModal.title = `${index}`
       if (item && item.id) {
+        this.formEmployee.id = item.id
         this.formEmployee.name = item.name
         this.formEmployee.deptId = item.deptId
         this.isUpdatedMode = true
@@ -209,8 +248,13 @@ export default {
       this.$root.$emit('bv::show::modal', this.employeeModal.id, button)
     },
     department (item, index, button) {
+      this.isUpdatedMode = false
       this.departmentModal.title = `${index}`
-      this.departmentModal.content = JSON.stringify(item, null, 2)
+      if (item && item.id) {
+        this.formDepartment.id = item.id
+        this.formDepartment.name = item.name
+        this.isUpdatedMode = true
+      }
       this.$root.$emit('bv::show::modal', this.departmentModal.id, button)
     },
     resetEmployeeModal () {
