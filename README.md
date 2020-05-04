@@ -32,7 +32,7 @@ kind create cluster
 
 According to [this page](https://kind.sigs.k8s.io/docs/user/ingress/), it is possible
 to create an ingress controller to assign an static IP to your cluster and also
-to be able to call the componentes using an ingress and avoiding port forwarding.
+to be able to call the components using an ingress and avoiding port forwarding.
 
 ![](/img/ingress.png)
 
@@ -86,9 +86,10 @@ All the resources all exposed through NGINX server, which acts as an API Gateway
 kubectl port-forward <gateway_pod_name> 8080
 ```
 
-**Note**: This is necessary only if you didn't install the ingress.
+**Note**: This is necessary only if you didn't install the ingress. But, if you
+prefer port forwarding way, please add `:8080` to all URL's below.
 
-Then open the following URL [localhost:8080](http://localhost:8080) in a browser
+Then open the following URL [localhost/](http://localhost/) in a browser
 to access to the Web application.
 
 ![](/img/front.png)
@@ -97,18 +98,18 @@ to access to the Web application.
 
 Open the following URLs in a browser:
 
-* Access to [grafana's dashboard](http://localhost:8080/grafana) with: `http://localhost:8080/grafana`
+* Access to [grafana's dashboard](http://localhost/grafana) with: `http://localhost/grafana`
 
-* Access to [kibana's dashboard](http://localhost:8080/kibana) with: `http://localhost:8080/kibana`
+* Access to [kibana's dashboard](http://localhost/kibana) with: `http://localhost/kibana`
 
-* Access to [jaeger's dashboard](http://localhost:8080/jaeger) with: `http://localhost:8080/jaeger`
+* Access to [jaeger's dashboard](http://localhost/jaeger) with: `http://localhost/jaeger`
 
-* Access to [prometheus' dashboard](http://localhost:8080/prometheus) with: `http://localhost:8080/prometheus`
+* Access to [prometheus' dashboard](http://localhost/prometheus) with: `http://localhost/prometheus`
 
 * Access to swagger's dashboard:
-  * Employee: [localhost:8080/employee/swagger-ui](http://localhost:8080/employee/swagger-ui)
-  * Department: [localhost:8080/department/swagger-ui](http://localhost:8080/department/swagger-ui)
-  * Human Resources: [localhost:8080/hr/swagger-ui](http://localhost:8080/hr/swagger-ui)
+  * Employee: [localhost/employee/swagger-ui](http://localhost/employee/swagger-ui)
+  * Department: [localhost/department/swagger-ui](http://localhost/department/swagger-ui)
+  * Human Resources: [localhost/hr/swagger-ui](http://localhost/hr/swagger-ui)
 
 ## Load images to avoid errors
 
