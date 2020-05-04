@@ -33,3 +33,5 @@ For detailed explanation on how deploy on NGINX, check out [NGINX-proxy](https:/
 ```bash
 $ docker build -f Dockerfile/Dockerfile -t serrodcal/hr-frontend-server:1.0.0-alpine .
 ```
+
+Further information in this [page](https://jonathanmh.com/deploying-a-nuxt-js-app-with-docker/)
