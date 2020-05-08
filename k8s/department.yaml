@@ -35,7 +35,7 @@ spec:
       containers:
         - name: department
           #image: serrodcal/department:1.0.1
-          image: serrodcal/department-native:1.0.2
+          image: serrodcal/department-native:1.1.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
