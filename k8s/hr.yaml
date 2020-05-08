@@ -35,7 +35,7 @@ spec:
       containers:
         - name: hr
           #image: serrodcal/hr:1.0.1
-          image: serrodcal/hr-native:1.0.1
+          image: serrodcal/hr-native:1.0.2
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080

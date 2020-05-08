@@ -35,7 +35,7 @@ spec:
       containers:
         - name: employee
           #image: serrodcal/employee:1.0.1
-          image: serrodcal/employee-native:1.0.1
+          image: serrodcal/employee-native:1.0.2
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
