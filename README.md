@@ -32,16 +32,9 @@ kind create cluster --config kind/kind-ingress-config.yaml
 
 ![](/img/ingress.png)
 
-Install the ingress (NGINX) with:
-```
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml
-```
-
-**Note**: Or if you prefer, use [Contour](https://kind.sigs.k8s.io/docs/user/ingress/#contour) instead.
-
 Use `ingress/ingress.yaml` file with:
 ```
-kubectl apply -f ingress/ingress.yaml
+kubectl apply -f k8s/ingress.yaml
 ```
 
 ### Enable multinode with ingress
