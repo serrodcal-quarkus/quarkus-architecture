@@ -34,8 +34,8 @@ spec:
     spec:
       containers:
         - name: department
-          #image: serrodcal/department:1.0.1
-          image: serrodcal/department-native:1.1.0
+          #image: serrodcal/quarkus-arch-department:1.2.0-jvm
+          image: serrodcal/quarkus-arch-department:1.2.0-native
           #image: serrodcal/department-distroless:1.1.1
           imagePullPolicy: IfNotPresent
           ports:

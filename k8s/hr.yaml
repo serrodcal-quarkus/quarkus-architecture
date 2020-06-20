@@ -34,9 +34,8 @@ spec:
     spec:
       containers:
         - name: hr
-          #image: serrodcal/hr:1.0.1
-          image: serrodcal/hr-native:1.1.0
-          #image: serrodcal/hr-distroless:1.1.1
+          #image: serrodcal/quarkus-arch-hr:1.2.0-jvm
+          image: serrodcal/quarkus-arch-hr:1.2.0-native
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080

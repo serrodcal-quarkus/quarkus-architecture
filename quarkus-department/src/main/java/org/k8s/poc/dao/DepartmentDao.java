@@ -30,10 +30,10 @@ public class DepartmentDao {
     }
 
     private void initdb() {
-        client.query("DROP TABLE IF EXISTS departments")
-                .flatMap(r -> client.query("CREATE TABLE departments (id SERIAL PRIMARY KEY, name TEXT NOT NULL)"))
-                .flatMap(r -> client.query("INSERT INTO departments (name) VALUES ('IT')"))
-                .flatMap(r -> client.query("INSERT INTO departments (name) VALUES ('HR')"))
+        client.query("DROP TABLE IF EXISTS departments").execute()
+                .flatMap(r -> client.query("CREATE TABLE departments (id SERIAL PRIMARY KEY, name TEXT NOT NULL)").execute())
+                .flatMap(r -> client.query("INSERT INTO departments (name) VALUES ('IT')").execute())
+                .flatMap(r -> client.query("INSERT INTO departments (name) VALUES ('HR')").execute())
                 .await().indefinitely();
     }
 
@@ -42,7 +42,7 @@ public class DepartmentDao {
     }
 
     public Multi<Department> findAll() {
-        return client.query("SELECT id, name FROM departments")
+        return client.query("SELECT id, name FROM departments").execute()
                 // Create a Multi from the set of rows:
                 .onItem().produceMulti(set -> Multi.createFrom().items(() -> StreamSupport.stream(set.spliterator(), false)))
                 // For each row create a fruit instance
@@ -50,23 +50,23 @@ public class DepartmentDao {
     }
 
     public Uni<Department> findById(Long id) {
-        return client.preparedQuery("SELECT id, name FROM departments WHERE id = $1", Tuple.of(id))
+        return client.preparedQuery("SELECT id, name FROM departments WHERE id = $1").execute(Tuple.of(id))
                 .onItem().apply(RowSet::iterator)
                 .onItem().apply(iterator -> iterator.hasNext() ? from(iterator.next()) : null);
     }
 
     public Uni<Long> save(String name) {
-        return client.preparedQuery("INSERT INTO departments (name) VALUES ($1) RETURNING (id)", Tuple.of(name))
+        return client.preparedQuery("INSERT INTO departments (name) VALUES ($1) RETURNING (id)").execute(Tuple.of(name))
                 .onItem().apply(pgRowSet -> pgRowSet.iterator().next().getLong("id"));
     }
 
     public Uni<Boolean> update(Long id, String name) {
-        return client.preparedQuery("UPDATE departments SET name = $1 WHERE id = $2", Tuple.of(name, id))
+        return client.preparedQuery("UPDATE departments SET name = $1 WHERE id = $2").execute(Tuple.of(name, id))
                 .onItem().apply(pgRowSet -> pgRowSet.rowCount() == 1);
     }
 
     public Uni<Boolean> delete(Long id) {
-        return client.preparedQuery("DELETE FROM departments WHERE id = $1", Tuple.of(id))
+        return client.preparedQuery("DELETE FROM departments WHERE id = $1").execute(Tuple.of(id))
                 .onItem().apply(pgRowSet -> pgRowSet.rowCount() == 1);
     }
 
