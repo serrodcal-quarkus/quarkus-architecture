@@ -1,4 +1,4 @@
-package org.k8s.poc.openapi;
+package org.serrodcal.poc.openapi;
 
 import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
 import org.eclipse.microprofile.openapi.annotations.info.Contact;
@@ -9,7 +9,7 @@ import javax.ws.rs.core.Application;
 @OpenAPIDefinition(
         info = @Info(
                 title="Department API",
-                version = "1.1.0",
+                version = "1.0.0",
                 contact = @Contact(
                         name = "Example API Support",
                         url = "http://exampleurl.com/contact",

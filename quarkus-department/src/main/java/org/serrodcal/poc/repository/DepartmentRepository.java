@@ -1,9 +1,9 @@
-package org.k8s.poc.repository;
+package org.serrodcal.poc.repository;
 
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
-import org.k8s.poc.dao.DepartmentDao;
-import org.k8s.poc.domain.Department;
+import org.serrodcal.poc.dao.DepartmentDao;
+import org.serrodcal.poc.domain.Department;
 
 import javax.enterprise.context.ApplicationScoped;
 

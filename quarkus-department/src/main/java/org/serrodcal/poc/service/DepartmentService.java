@@ -1,10 +1,10 @@
-package org.k8s.poc.service;
+package org.serrodcal.poc.service;
 
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import org.eclipse.microprofile.faulttolerance.CircuitBreaker;
-import org.k8s.poc.domain.Department;
-import org.k8s.poc.repository.DepartmentRepository;
+import org.serrodcal.poc.domain.Department;
+import org.serrodcal.poc.repository.DepartmentRepository;
 
 import javax.enterprise.context.ApplicationScoped;
 
