@@ -1,4 +1,4 @@
-package org.k8s.poc.domain;
+package org.serrodcal.poc.domain;
 
 public class Employee {
 
