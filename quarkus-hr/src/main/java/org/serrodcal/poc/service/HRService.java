@@ -1,15 +1,11 @@
 package org.serrodcal.poc.service;
 
-import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import org.eclipse.microprofile.faulttolerance.CircuitBreaker;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
-import org.serrodcal.poc.domain.Employee;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.List;
-import java.util.Objects;
 
 @ApplicationScoped
 public class HRService {
@@ -24,59 +20,35 @@ public class HRService {
 
     @CircuitBreaker(requestVolumeThreshold = 4)
     public Uni<Boolean> assignEmployeeToDept(Long employeeId, Long deptId) {
-
         return departmentService.getDepartment(deptId).flatMap(dept -> {
-            if (Objects.nonNull(dept)){
-                return employeeService.getEmployee(employeeId).flatMap( empl -> {
-                    if (Objects.nonNull(empl) && empl.deptId != dept.id){
-                        empl.deptId = dept.id;
-                        return employeeService.updateEmployee(empl).flatMap(response -> {
-                            if (response.getStatus() == 200) {
-                                return Uni.createFrom().item(true);
-                            } else {
-                                return Uni.createFrom().item(false);
-                            }
-                        });
-                    } else {
-                        return Uni.createFrom().item(false);
-                    }
-                } );
-            } else {
-                return Uni.createFrom().item(false);
-            }
+            return employeeService.getEmployee(employeeId).flatMap( empl -> {
+                if (empl.deptId != dept.id){
+                    empl.deptId = dept.id;
+                    return employeeService.updateEmployee(empl).flatMap(result -> {
+                        return Uni.createFrom().item(result);
+                    });
+                } else {
+                    return Uni.createFrom().item(false);
+                }
+            } );
         });
     }
 
     @CircuitBreaker(requestVolumeThreshold = 4)
     public Uni<Boolean> unassignEmployeeToDept(Long id) {
-        return employeeService.getEmployee(id).flatMap( empl -> {
-            if (Objects.nonNull(empl)) {
-                empl.deptId = null;
-                return employeeService.updateEmployee(empl).flatMap(response -> {
-                    if (response.getStatus() == 200) {
-                        return Uni.createFrom().item(true);
-                    } else {
-                        return Uni.createFrom().item(false);
-                    }
-                });
-            } else {
-                return Uni.createFrom().item(false);
-            }
+        return this.employeeService.getEmployee(id).flatMap(empl -> {
+           return this.employeeService.updateEmployee(empl).flatMap(result -> {
+               return Uni.createFrom().item(result);
+           });
         });
     }
 
     @CircuitBreaker(requestVolumeThreshold = 4)
-    public Uni<Boolean> deleteDepartment(Long id) {
-        return this.departmentService.getDepartment(id).flatMap(dept -> {
-            if (Objects.nonNull(dept)) {
-                this.employeeService.getEmployeesByDept(dept.id).onItem().invoke(empl -> {
-                    empl.deptId = dept.id;
-                    this.employeeService.updateEmployee(empl);
-                });
-                return Uni.createFrom().item(true);
-            } else {
-                return Uni.createFrom().item(false);
-            }
+    public Uni<Boolean> deleteDepartment(Long deptId) {
+        return this.departmentService.getDepartment(deptId).flatMap(dept -> {
+            return this.employeeService.unassignEmployees(deptId).flatMap(result -> {
+                return Uni.createFrom().item(result);
+            });
         });
     }
 

@@ -7,6 +7,7 @@ import org.serrodcal.poc.domain.Employee;
 import org.serrodcal.poc.repository.EmployeeRepository;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.util.List;
 
 @ApplicationScoped
 public class EmployeeService {
@@ -31,6 +32,9 @@ public class EmployeeService {
 
     @CircuitBreaker(requestVolumeThreshold = 4)
     public Uni<Boolean> updateEmployee(Employee employee) { return employeeRepository.updateEmployee(employee); }
+
+    @CircuitBreaker(requestVolumeThreshold = 4)
+    public Uni<Boolean> unassignEmployees(Long deptId) { return employeeRepository.unassignEmployees(deptId); }
 
     @CircuitBreaker(requestVolumeThreshold = 4)
     public Uni<Boolean> deleteEmployee(Long id) { return employeeRepository.deleteEmployee(id); }

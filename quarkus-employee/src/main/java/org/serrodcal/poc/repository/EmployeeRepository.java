@@ -6,6 +6,8 @@ import org.serrodcal.poc.dao.EmployeeDao;
 import org.serrodcal.poc.domain.Employee;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.util.ArrayList;
+import java.util.List;
 
 @ApplicationScoped
 public class EmployeeRepository {
@@ -33,4 +35,7 @@ public class EmployeeRepository {
     public Uni<Boolean> updateEmployee(Employee employee) { return employeeDao.update(employee.id, employee.name, employee.deptId); }
 
     public Uni<Boolean> deleteEmployee(Long id) { return employeeDao.delete(id); }
+
+    public Uni<Boolean> unassignEmployees(Long deptId) { return employeeDao.unassignEmployees(deptId); }
+
 }

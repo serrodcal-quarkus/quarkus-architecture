@@ -81,6 +81,12 @@ public class EmployeeDao {
                 .onItem().transform(pgRowSet -> pgRowSet.rowCount() == 1);
     }
 
+    public Uni<Boolean> unassignEmployees(Long deptId) {
+        return client.preparedQuery("UPDATE employees SET dept_id = NULL WHERE dept_id = $1")
+                .execute(Tuple.of(deptId))
+                .onItem().transform(pgRowSet -> pgRowSet.rowCount() == 1);
+    }
+
     private static Employee from(Row row) { return new Employee(row.getLong("id"), row.getString("name"), row.getLong("dept_id")); }
 
 }

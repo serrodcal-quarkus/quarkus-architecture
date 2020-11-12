@@ -5,6 +5,7 @@ import io.quarkus.vertx.web.Body;
 import io.quarkus.vertx.web.Param;
 import io.quarkus.vertx.web.Route;
 import io.quarkus.vertx.web.RouteBase;
+import io.vertx.core.cli.annotations.ParsedAsList;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.Json;
@@ -26,6 +27,7 @@ import org.serrodcal.poc.service.EmployeeService;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.List;
 
 @ApplicationScoped
 @RouteBase(path = "api/v2")
@@ -247,6 +249,30 @@ public class EmployeeResource {
     void deleteEmployee(RoutingContext rc, @Param("id") String id) {
         logger.info("deleteEmployee wit [id:" + id.toString() + "]");
         this.employeeService.deleteEmployee(Long.valueOf(id)).subscribe().with(result -> {
+            if (result) {
+                rc.response()
+                  .putHeader(HttpHeaders.CONTENT_TYPE, TEXT_PLAIN)
+                  .setStatusCode(HttpResponseStatus.OK.code())
+                  .end(Json.encode(result.toString()));
+            } else {
+                rc.response()
+                  .putHeader(HttpHeaders.CONTENT_TYPE, TEXT_PLAIN)
+                  .setStatusCode(HttpResponseStatus.ACCEPTED.code())
+                  .end("Employee do not added");
+            }
+        },
+        failure -> {
+            rc.response()
+              .setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code())
+              .putHeader(HttpHeaders.CONTENT_TYPE, TEXT_PLAIN)
+              .end(failure.getMessage());
+        });
+    }
+
+    @Route(path = "employee/department/:id/unassign", methods = HttpMethod.POST)
+    void unassignedEmployees(RoutingContext rc, @Param String deptId) {
+        logger.info("unassignedEmployees with [deptId:" + deptId + "]");
+        this.employeeService.unassignEmployees(Long.valueOf(deptId)).subscribe().with(result -> {
             if (result) {
                 rc.response()
                   .putHeader(HttpHeaders.CONTENT_TYPE, TEXT_PLAIN)

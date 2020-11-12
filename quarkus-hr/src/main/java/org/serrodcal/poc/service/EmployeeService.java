@@ -29,7 +29,11 @@ public interface EmployeeService {
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Uni<Response> updateEmployee(Employee employee);
+    @Produces(MediaType.TEXT_PLAIN)
+    public Uni<Boolean> updateEmployee(Employee employee);
+
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    public Uni<Boolean> unassignEmployees(Long deptId);
 
 }
