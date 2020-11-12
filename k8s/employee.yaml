@@ -34,8 +34,7 @@ spec:
     spec:
       containers:
         - name: employee
-          #image: serrodcal/employee:1.0.1
-          image: serrodcal/employee-native:1.1.0
+          image: serrodcal/quarkus-arch-employee:1.0.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080

@@ -42,8 +42,7 @@ public class EmployeeDao {
     }
 
     public Multi<Employee> findAll() {
-        return client.query("SELECT id, name, dept_id FROM employees")
-                .execute()
+        return client.query("SELECT id, name, dept_id FROM employees").execute()
                 // Create a Multi from the set of rows:
                 .onItem().transformToMulti(set -> Multi.createFrom().items(() -> StreamSupport.stream(set.spliterator(), false)))
                 // For each row create a fruit instance
