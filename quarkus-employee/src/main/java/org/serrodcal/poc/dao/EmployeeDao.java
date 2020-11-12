@@ -82,8 +82,6 @@ public class EmployeeDao {
                 .onItem().transform(pgRowSet -> pgRowSet.rowCount() == 1);
     }
 
-    private static Employee from(Row row) {
-        return new Employee(row.getLong("id"), row.getString("name"), row.getLong("dept_id"));
-    }
+    private static Employee from(Row row) { return new Employee(row.getLong("id"), row.getString("name"), row.getLong("dept_id")); }
 
 }

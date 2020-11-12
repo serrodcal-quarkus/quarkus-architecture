@@ -1,9 +1,9 @@
-package org.k8s.poc.service;
+package org.serrodcal.poc.service;
 
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
-import org.k8s.poc.domain.Employee;
+import org.serrodcal.poc.domain.Employee;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

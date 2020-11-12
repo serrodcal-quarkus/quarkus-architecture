@@ -1,4 +1,4 @@
-package org.k8s.poc.health;
+package org.serrodcal.poc.health;
 
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;

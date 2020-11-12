@@ -1,11 +1,14 @@
-package org.k8s.poc.service;
+package org.serrodcal.poc.service;
 
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import org.eclipse.microprofile.faulttolerance.CircuitBreaker;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
+import org.serrodcal.poc.domain.Employee;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Objects;
 
 @ApplicationScoped
@@ -56,6 +59,21 @@ public class HRService {
                         return Uni.createFrom().item(false);
                     }
                 });
+            } else {
+                return Uni.createFrom().item(false);
+            }
+        });
+    }
+
+    @CircuitBreaker(requestVolumeThreshold = 4)
+    public Uni<Boolean> deleteDepartment(Long id) {
+        return this.departmentService.getDepartment(id).flatMap(dept -> {
+            if (Objects.nonNull(dept)) {
+                this.employeeService.getEmployeesByDept(dept.id).onItem().invoke(empl -> {
+                    empl.deptId = dept.id;
+                    this.employeeService.updateEmployee(empl);
+                });
+                return Uni.createFrom().item(true);
             } else {
                 return Uni.createFrom().item(false);
             }
