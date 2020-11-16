@@ -5,7 +5,6 @@ import io.quarkus.vertx.web.Body;
 import io.quarkus.vertx.web.Param;
 import io.quarkus.vertx.web.Route;
 import io.quarkus.vertx.web.RouteBase;
-import io.vertx.core.cli.annotations.ParsedAsList;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.Json;
@@ -27,7 +26,6 @@ import org.serrodcal.poc.service.EmployeeService;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.List;
 
 @ApplicationScoped
 @RouteBase(path = "api/v2")

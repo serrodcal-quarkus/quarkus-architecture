@@ -6,8 +6,6 @@ import org.serrodcal.poc.dao.EmployeeDao;
 import org.serrodcal.poc.domain.Employee;
 
 import javax.enterprise.context.ApplicationScoped;
-import java.util.ArrayList;
-import java.util.List;
 
 @ApplicationScoped
 public class EmployeeRepository {

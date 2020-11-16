@@ -7,7 +7,6 @@ import org.serrodcal.poc.domain.Employee;
 import org.serrodcal.poc.repository.EmployeeRepository;
 
 import javax.enterprise.context.ApplicationScoped;
-import java.util.List;
 
 @ApplicationScoped
 public class EmployeeService {
