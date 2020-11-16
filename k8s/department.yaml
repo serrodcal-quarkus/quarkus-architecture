@@ -34,7 +34,7 @@ spec:
     spec:
       containers:
         - name: department
-          image: serrodcal/quarkus-arch-department:1.0.0-jvm
+          image: serrodcal/quarkus-arch-department:1.0.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
