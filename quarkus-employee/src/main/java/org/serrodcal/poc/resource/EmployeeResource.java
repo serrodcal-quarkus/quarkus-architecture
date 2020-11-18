@@ -28,7 +28,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
-@RouteBase(path = "api/v2")
+@RouteBase(path = "api/v1")
 @Tag(name = "Employee Resource", description = "Exposing Employee API to manage employees from the company using Vert.x")
 public class EmployeeResource {
 
@@ -43,11 +43,10 @@ public class EmployeeResource {
 
     @Route(path = "employee", methods = HttpMethod.GET)
     @APIResponse(responseCode="200",
-            description="Get list of employees",
+            description="Get all the employees",
             content=@Content(mediaType="application/json", schema=@Schema(type=SchemaType.ARRAY)))
     @APIResponse(responseCode="204",
-            description="No employees",
-            content=@Content(mediaType="text/plain", schema=@Schema(type=SchemaType.STRING)))
+            description="No employees")
     @APIResponse(responseCode="500",
             description="Internal Server Error",
             content=@Content(mediaType="text/plain", schema=@Schema(type=SchemaType.STRING)))
@@ -55,19 +54,19 @@ public class EmployeeResource {
     @Retry(maxRetries = 4)
     @Counted(name = "countGetEmployees", description = "Count number of served messages")
     @Timed(name = "checksGetEmployees", description = "A measure of how much time takes to serve employees", unit = MetricUnits.MILLISECONDS)
+    @org.eclipse.microprofile.opentracing.Traced
     void getEmployees(RoutingContext rc) {
         logger.info("getEmployees");
         this.employeeService.getEmployees().collectItems().asList().subscribe().with(result -> {
-                if (result != null) {
+                if (result.size() > 0) {
                     rc.response()
                       .putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
                       .setStatusCode(HttpResponseStatus.OK.code())
                       .end(Json.encode(result));
                 } else {
                     rc.response()
-                      .putHeader(HttpHeaders.CONTENT_TYPE, TEXT_PLAIN)
                       .setStatusCode(HttpResponseStatus.NO_CONTENT.code())
-                      .end("No employees");
+                      .end();
                 }
             },
             failure -> {
@@ -81,11 +80,10 @@ public class EmployeeResource {
 
     @Route(path = "employee/:id", methods = HttpMethod.GET)
     @APIResponse(responseCode="200",
-            description="Get employee",
+            description="Get a employee by ID",
             content=@Content(mediaType="application/json", schema=@Schema(type=SchemaType.OBJECT)))
     @APIResponse(responseCode="204",
-            description="No employee",
-            content=@Content(mediaType="text/plain", schema=@Schema(type=SchemaType.STRING)))
+            description="No employee for the given ID")
     @APIResponse(responseCode="500",
             description="Internal Server Error",
             content=@Content(mediaType="text/plain", schema=@Schema(type=SchemaType.STRING)))
@@ -93,6 +91,7 @@ public class EmployeeResource {
     @Retry(maxRetries = 4)
     @Counted(name = "countGetEmployee", description = "Count number of served messages")
     @Timed(name = "checksGetEmployee", description = "A measure of how much time takes to serve a employee", unit = MetricUnits.MILLISECONDS)
+    @org.eclipse.microprofile.opentracing.Traced
     void getEmployee(RoutingContext rc, @Param("id") String id) {
         logger.info("getEmployee with [id:" + id.toString() + "]");
         this.employeeService.getEmployee(Long.valueOf(id)).subscribe().with(result -> {
@@ -103,9 +102,8 @@ public class EmployeeResource {
                        .end(Json.encode(result));
                 } else {
                     rc.response()
-                       .putHeader(HttpHeaders.CONTENT_TYPE, TEXT_PLAIN)
                        .setStatusCode(HttpResponseStatus.NO_CONTENT.code())
-                       .end("No employees");
+                       .end();
                 }
             },
             failure -> {
@@ -118,11 +116,10 @@ public class EmployeeResource {
 
     @Route(path = "employee/department/:deptId", methods = HttpMethod.GET)
     @APIResponse(responseCode="200",
-            description="Get list of employees by department",
+            description="Get all the employees by department",
             content=@Content(mediaType="application/json", schema=@Schema(type=SchemaType.ARRAY)))
     @APIResponse(responseCode="204",
-            description="No employees",
-            content=@Content(mediaType="text/plain", schema=@Schema(type=SchemaType.STRING)))
+            description="No employees for the given department")
     @APIResponse(responseCode="500",
             description="Internal Server Error",
             content=@Content(mediaType="text/plain", schema=@Schema(type=SchemaType.STRING)))
@@ -130,19 +127,21 @@ public class EmployeeResource {
     @Retry(maxRetries = 4)
     @Counted(name = "countGetEmployeesByDept", description = "Count number of served messages")
     @Timed(name = "checksGetEmployeesByDept", description = "A measure of how much time takes to serve employees", unit = MetricUnits.MILLISECONDS)
+    @org.eclipse.microprofile.opentracing.Traced
     void getEmployeesByDept(RoutingContext rc, @Param("deptId") String deptId) {
         logger.info("getEmployeesByDept with [deptId: " + deptId.toString() + "]");
         this.employeeService.getEmployeesByDept(Long.valueOf(deptId)).collectItems().asList().subscribe().with(result -> {
-                if (result != null)
+                if (result.size() > 0) {
                     rc.response()
-                        .putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
-                        .setStatusCode(HttpResponseStatus.OK.code())
-                        .end(Json.encode(result));
-                else
+                      .putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
+                      .setStatusCode(HttpResponseStatus.OK.code())
+                      .end(Json.encode(result));
+                } else {
                     rc.response()
                         .putHeader(HttpHeaders.CONTENT_TYPE, TEXT_PLAIN)
                         .setStatusCode(HttpResponseStatus.NO_CONTENT.code())
-                        .end("No employees");
+                        .end(Json.encode(result));
+                }
         },
         failure -> {
             rc.response()
@@ -156,11 +155,10 @@ public class EmployeeResource {
     @RequestBody(required = true,
             content = @Content(mediaType="application/json", schema=@Schema(type=SchemaType.OBJECT)))
     @APIResponse(responseCode="200",
-            description="Get the id of the new employee",
+            description="Employee created and return the ID",
             content=@Content(mediaType="text/plain", schema=@Schema(type=SchemaType.OBJECT)))
-    @APIResponse(responseCode="500",
-            description="Employee can not be created",
-            content=@Content(mediaType="text/plain", schema=@Schema(type=SchemaType.STRING)))
+    @APIResponse(responseCode="202",
+            description="Employee could not be created")
     @APIResponse(responseCode="500",
             description="Internal Server Error",
             content=@Content(mediaType="text/plain", schema=@Schema(type=SchemaType.STRING)))
@@ -168,6 +166,7 @@ public class EmployeeResource {
     @Retry(maxRetries = 4)
     @Counted(name = "countCreateEmployee", description = "Count number of served messages")
     @Timed(name = "checksCreateEmployee", description = "A measure of how much time takes to create a employee", unit = MetricUnits.MILLISECONDS)
+    @org.eclipse.microprofile.opentracing.Traced
     void createEmployee(RoutingContext rc, @Body Employee employee) {
         logger.info("createEmployee with [name:" + employee.name + "]");
         this.employeeService.createEmployee(employee).subscribe().with(result -> {
@@ -178,9 +177,8 @@ public class EmployeeResource {
                   .end(Json.encode(result));
             } else {
                 rc.response()
-                  .putHeader(HttpHeaders.CONTENT_TYPE, TEXT_PLAIN)
-                  .setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code())
-                  .end("Employee do not added");
+                  .setStatusCode(HttpResponseStatus.ACCEPTED.code())
+                  .end();
             }
         },
         failure -> {
@@ -195,11 +193,9 @@ public class EmployeeResource {
     @RequestBody(required = true,
             content = @Content(mediaType="application/json", schema=@Schema(type=SchemaType.OBJECT)))
     @APIResponse(responseCode="200",
-            description="Get true or false if the employee has been update or not",
-            content=@Content(mediaType="text/plain", schema=@Schema(type=SchemaType.STRING)))
+            description="Employee updated")
     @APIResponse(responseCode="202",
-            description="Employee can not be updated",
-            content=@Content(mediaType="text/plain", schema=@Schema(type=SchemaType.STRING)))
+            description="Employee could not be updated")
     @APIResponse(responseCode="500",
             description="Internal Server Error",
             content=@Content(mediaType="text/plain", schema=@Schema(type=SchemaType.STRING)))
@@ -207,19 +203,18 @@ public class EmployeeResource {
     @Retry(maxRetries = 4)
     @Counted(name = "countUpdateEmployee", description = "Count number of served messages")
     @Timed(name = "checksUpdateEmployee", description = "A measure of how much time takes to update a employee", unit = MetricUnits.MILLISECONDS)
+    @org.eclipse.microprofile.opentracing.Traced
     void updateEmployee(RoutingContext rc, @Body Employee employee) {
         logger.info("updateEmployee with [name:" + employee.name + "]");
         this.employeeService.updateEmployee(employee).subscribe().with(result -> {
             if (result) {
                 rc.response()
-                  .putHeader(HttpHeaders.CONTENT_TYPE, TEXT_PLAIN)
                   .setStatusCode(HttpResponseStatus.OK.code())
-                  .end(Json.encode(result.toString()));
+                  .end();
             } else {
                 rc.response()
-                  .putHeader(HttpHeaders.CONTENT_TYPE, TEXT_PLAIN)
                   .setStatusCode(HttpResponseStatus.ACCEPTED.code())
-                  .end("Employee do not added");
+                  .end();
             }
         },
         failure -> {
@@ -232,11 +227,10 @@ public class EmployeeResource {
 
     @Route(path = "employee/:id", methods = HttpMethod.DELETE)
     @APIResponse(responseCode="200",
-            description="Selected employee was deleted",
+            description="Employee deleted",
             content=@Content(mediaType="text/plain", schema=@Schema(type=SchemaType.STRING)))
     @APIResponse(responseCode="202",
-            description="Employee can not be deleted",
-            content=@Content(mediaType="text/plain", schema=@Schema(type=SchemaType.STRING)))
+            description="Employee could not be deleted")
     @APIResponse(responseCode="500",
             description="Internal Server Error",
             content=@Content(mediaType="text/plain", schema=@Schema(type=SchemaType.STRING)))
@@ -244,19 +238,18 @@ public class EmployeeResource {
     @Retry(maxRetries = 4)
     @Counted(name = "countDeleteEmployee", description = "Count number of served messages")
     @Timed(name = "checksDeleteEmployee", description = "A measure of how much time takes to delete a employee", unit = MetricUnits.MILLISECONDS)
+    @org.eclipse.microprofile.opentracing.Traced
     void deleteEmployee(RoutingContext rc, @Param("id") String id) {
         logger.info("deleteEmployee wit [id:" + id.toString() + "]");
         this.employeeService.deleteEmployee(Long.valueOf(id)).subscribe().with(result -> {
             if (result) {
                 rc.response()
-                  .putHeader(HttpHeaders.CONTENT_TYPE, TEXT_PLAIN)
                   .setStatusCode(HttpResponseStatus.OK.code())
-                  .end(Json.encode(result.toString()));
+                  .end();
             } else {
                 rc.response()
-                  .putHeader(HttpHeaders.CONTENT_TYPE, TEXT_PLAIN)
                   .setStatusCode(HttpResponseStatus.ACCEPTED.code())
-                  .end("Employee do not added");
+                  .end();
             }
         },
         failure -> {
@@ -268,19 +261,30 @@ public class EmployeeResource {
     }
 
     @Route(path = "employee/department/:id/unassign", methods = HttpMethod.POST)
-    void unassignedEmployees(RoutingContext rc, @Param String deptId) {
+    @APIResponse(responseCode="200",
+            description="Employees unassigned",
+            content=@Content(mediaType="text/plain", schema=@Schema(type=SchemaType.STRING)))
+    @APIResponse(responseCode="202",
+            description="Employees could not be unassigned")
+    @APIResponse(responseCode="500",
+            description="Internal Server Error",
+            content=@Content(mediaType="text/plain", schema=@Schema(type=SchemaType.STRING)))
+    @Timeout(1000)
+    @Retry(maxRetries = 4)
+    @Counted(name = "countUnassignEmployees", description = "Count number of served messages")
+    @Timed(name = "checksUnassignEmployees", description = "A measure of how much time takes to unassign a employee", unit = MetricUnits.MILLISECONDS)
+    @org.eclipse.microprofile.opentracing.Traced
+    void unassignedEmployees(RoutingContext rc, @Param("deptId") String deptId) {
         logger.info("unassignedEmployees with [deptId:" + deptId + "]");
         this.employeeService.unassignEmployees(Long.valueOf(deptId)).subscribe().with(result -> {
             if (result) {
                 rc.response()
-                  .putHeader(HttpHeaders.CONTENT_TYPE, TEXT_PLAIN)
                   .setStatusCode(HttpResponseStatus.OK.code())
-                  .end(Json.encode(result.toString()));
+                  .end();
             } else {
                 rc.response()
-                  .putHeader(HttpHeaders.CONTENT_TYPE, TEXT_PLAIN)
                   .setStatusCode(HttpResponseStatus.ACCEPTED.code())
-                  .end("Employee do not added");
+                  .end();
             }
         },
         failure -> {
