@@ -25,7 +25,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
-@RouteBase(path = "api/v2")
+@RouteBase(path = "api/v1")
 @Tag(name = "HR Resource", description = "Exposing HR API to manage employees and departments from the company using Vert.x")
 public class HRResource {
 
@@ -36,13 +36,11 @@ public class HRResource {
     @Inject
     HRService hrService;
 
-    @Route(path = "hr/employee/:employeeId/assign/:deptId", methods = HttpMethod.POST)
+    @Route(path = "hr/employee/:employeeId/assign/department/:deptId", methods = HttpMethod.POST)
     @APIResponse(responseCode="200",
-            description="Get true if the employee has been assigned",
-            content=@Content(mediaType="text/plain", schema=@Schema(type= SchemaType.STRING)))
+            description="Employee assigned successfully")
     @APIResponse(responseCode="202",
-            description="Employee can not be assigned",
-            content=@Content(mediaType="text/plain", schema=@Schema(type=SchemaType.STRING)))
+            description="Employee could not be assigned")
     @APIResponse(responseCode="500",
             description="Internal Server Error",
             content=@Content(mediaType="text/plain", schema=@Schema(type=SchemaType.STRING)))
@@ -50,19 +48,18 @@ public class HRResource {
     @Retry(maxRetries = 4)
     @Counted(name = "countAssignEmployeeToDept", description = "Count number of served messages")
     @Timed(name = "checksAssignEmployeeToDept", description = "A measure of how much time takes to assign a employee to a given Department", unit = MetricUnits.MILLISECONDS)
+    @org.eclipse.microprofile.opentracing.Traced
     void assignEmployeeToDept(RoutingContext rc, @Param("employeeId") String employeeId, @Param("deptId") String deptId) {
         logger.info("assignEmployeeToDept with [employeeId:" + employeeId + ", dept:" + deptId + "]");
         this.hrService.assignEmployeeToDept(Long.valueOf(employeeId), Long.valueOf(deptId)).subscribe().with(result -> {
             if (result) {
                 rc.response()
-                  .putHeader(HttpHeaders.CONTENT_TYPE, TEXT_PLAIN)
                   .setStatusCode(HttpResponseStatus.OK.code())
-                  .end(Json.encode(result.toString()));
+                  .end();
             } else {
                 rc.response()
-                  .putHeader(HttpHeaders.CONTENT_TYPE, TEXT_PLAIN)
                   .setStatusCode(HttpResponseStatus.ACCEPTED.code())
-                  .end("Employee do not assigned");
+                  .end();
             }
         },
         failure -> {
@@ -73,52 +70,11 @@ public class HRResource {
         });
     }
 
-
-
-    @Route(path = "hr/employee/:employeeId/assign/:deptId", methods = HttpMethod.PUT)
+    @Route(path = "hr/employee/:employeeId/unassign", methods = HttpMethod.DELETE)
     @APIResponse(responseCode="200",
-            description="Get true if the employee has been unassigned",
-            content=@Content(mediaType="text/plain", schema=@Schema(type= SchemaType.STRING)))
+            description="Employee unassigned successfully")
     @APIResponse(responseCode="202",
-            description="Employee can not be unassigned",
-            content=@Content(mediaType="text/plain", schema=@Schema(type=SchemaType.STRING)))
-    @APIResponse(responseCode="500",
-            description="Internal Server Error",
-            content=@Content(mediaType="text/plain", schema=@Schema(type=SchemaType.STRING)))
-    @Timeout(1000)
-    @Retry(maxRetries = 4)
-    @Counted(name = "countChangeDeptOfEmployee", description = "Count number of served messages")
-    @Timed(name = "checksChangeDeptOfEmployee", description = "A measure of how much time takes to change a employee to a given Department", unit = MetricUnits.MILLISECONDS)
-    void changeDeptOfEmployee(RoutingContext rc, @Param("employeeId") String employeeId, @Param("deptId") String deptId) {
-        logger.info("changeDeptOfEmployee with [name:" + employeeId + ", dept:" + deptId + "]");
-        this.hrService.assignEmployeeToDept(Long.valueOf(employeeId), Long.valueOf(deptId)).subscribe().with(result -> {
-            if (result) {
-                rc.response()
-                  .putHeader(HttpHeaders.CONTENT_TYPE, TEXT_PLAIN)
-                  .setStatusCode(HttpResponseStatus.OK.code())
-                  .end(Json.encode(result.toString()));
-            } else {
-                rc.response()
-                  .putHeader(HttpHeaders.CONTENT_TYPE, TEXT_PLAIN)
-                  .setStatusCode(HttpResponseStatus.ACCEPTED.code())
-                  .end("Employee do not assigned");
-            }
-        },
-        failure -> {
-            rc.response()
-              .putHeader(HttpHeaders.CONTENT_TYPE, TEXT_PLAIN)
-              .setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code())
-              .end(failure.getMessage());
-        });
-    }
-
-    @Route(path = "hr/:id", methods = HttpMethod.DELETE)
-    @APIResponse(responseCode="200",
-            description="Get true if the employee has been unassigned",
-            content=@Content(mediaType="text/plain", schema=@Schema(type= SchemaType.STRING)))
-    @APIResponse(responseCode="202",
-            description="Employee can not be unassigned",
-            content=@Content(mediaType="text/plain", schema=@Schema(type=SchemaType.STRING)))
+            description="Employee could not be unassigned")
     @APIResponse(responseCode="500",
             description="Internal Server Error",
             content=@Content(mediaType="text/plain", schema=@Schema(type=SchemaType.STRING)))
@@ -126,19 +82,18 @@ public class HRResource {
     @Retry(maxRetries = 4)
     @Counted(name = "countUnassignEmployeeToDept", description = "Count number of served messages")
     @Timed(name = "checksUnassignEmployeeToDept", description = "A measure of how much time takes to unassign a employee to a given Department", unit = MetricUnits.MILLISECONDS)
-    void unassignEmployeeToDept(RoutingContext rc, @Param("id") String id) {
+    @org.eclipse.microprofile.opentracing.Traced
+    void unassignEmployee(RoutingContext rc, @Param("id") String id) {
         logger.info("unassignEmployeeToDept wit [id:" + id + "]");
-        this.hrService.unassignEmployeeToDept(Long.valueOf(id)).subscribe().with(result -> {
+        this.hrService.unassignEmployee(Long.valueOf(id)).subscribe().with(result -> {
             if (result) {
                 rc.response()
-                  .putHeader(HttpHeaders.CONTENT_TYPE, TEXT_PLAIN)
                   .setStatusCode(HttpResponseStatus.OK.code())
-                  .end(Json.encode(result.toString()));
+                  .end();
             } else {
                 rc.response()
-                  .putHeader(HttpHeaders.CONTENT_TYPE, TEXT_PLAIN)
                   .setStatusCode(HttpResponseStatus.ACCEPTED.code())
-                  .end("Employee do not unassigned");
+                  .end();
             }
         },
         failure -> {
@@ -151,11 +106,9 @@ public class HRResource {
 
     @Route(path = "hr/department/:deptId", methods = HttpMethod.DELETE)
     @APIResponse(responseCode="200",
-            description="Get true if the department has been deleted and all the employees who belong to it have also been unassigned",
-            content=@Content(mediaType="text/plain", schema=@Schema(type= SchemaType.STRING)))
+            description="Delete all the employees belong to a given department")
     @APIResponse(responseCode="202",
-            description="Department can not be deleted",
-            content=@Content(mediaType="text/plain", schema=@Schema(type=SchemaType.STRING)))
+            description="Department could not be deleted")
     @APIResponse(responseCode="500",
             description="Internal Server Error",
             content=@Content(mediaType="text/plain", schema=@Schema(type=SchemaType.STRING)))
@@ -163,18 +116,17 @@ public class HRResource {
     @Retry(maxRetries = 4)
     @Counted(name = "countDeleteDepartment", description = "Count number of served messages")
     @Timed(name = "checksDeleteDepartment", description = "A measure of how much time takes to delete a department and also unassign all the employees who belong to it", unit = MetricUnits.MILLISECONDS)
-    void deleteDepartment(RoutingContext rc, @Param("deptId") String deptId) {
-        this.hrService.deleteDepartment(Long.valueOf(deptId)).subscribe().with(result -> {
+    @org.eclipse.microprofile.opentracing.Traced
+    void unassignEmployees(RoutingContext rc, @Param("deptId") String deptId) {
+        this.hrService.unassignEmployees(Long.valueOf(deptId)).subscribe().with(result -> {
             if (result) {
                 rc.response()
-                  .putHeader(HttpHeaders.CONTENT_TYPE, TEXT_PLAIN)
                   .setStatusCode(HttpResponseStatus.OK.code())
-                  .end(Json.encode(result.toString()));
+                  .end();
             } else {
                 rc.response()
-                  .putHeader(HttpHeaders.CONTENT_TYPE, TEXT_PLAIN)
                   .setStatusCode(HttpResponseStatus.ACCEPTED.code())
-                  .end("Department can not be deleted");
+                  .end();
             }
         },
         failure -> {

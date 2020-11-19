@@ -20,34 +20,54 @@ public class HRService {
 
     @CircuitBreaker(requestVolumeThreshold = 4)
     public Uni<Boolean> assignEmployeeToDept(Long employeeId, Long deptId) {
-        return departmentService.getDepartment(deptId).flatMap(dept -> {
-            return employeeService.getEmployee(employeeId).flatMap( empl -> {
-                if (empl.deptId != dept.id){
+
+        return this.departmentService.getDepartment(deptId).flatMap(dept -> {
+            return this.employeeService.getEmployee(employeeId).flatMap(empl -> {
+                if (empl.deptId != dept.id) {
                     empl.deptId = dept.id;
-                    return employeeService.updateEmployee(empl).flatMap(result -> {
-                        return Uni.createFrom().item(result);
+                    return this.employeeService.updateEmployee(empl).flatMap(result -> {
+                        if (result.getStatus() == 200) {
+                            return Uni.createFrom().item(true);
+                        } else {
+                            return Uni.createFrom().item(false);
+                        }
                     });
                 } else {
                     return Uni.createFrom().item(false);
                 }
-            } );
+            });
         });
     }
 
     @CircuitBreaker(requestVolumeThreshold = 4)
-    public Uni<Boolean> unassignEmployeeToDept(Long id) {
+    public Uni<Boolean> unassignEmployee(Long id) {
         return this.employeeService.getEmployee(id).flatMap(empl -> {
-           return this.employeeService.updateEmployee(empl).flatMap(result -> {
-               return Uni.createFrom().item(result);
+            empl.deptId = null;
+            return this.employeeService.updateEmployee(empl).flatMap(result -> {
+               if (result.getStatus() == 200) {
+                    return Uni.createFrom().item(true);
+               } else {
+                    return Uni.createFrom().item(false);
+               }
            });
         });
     }
 
     @CircuitBreaker(requestVolumeThreshold = 4)
-    public Uni<Boolean> deleteDepartment(Long deptId) {
+    public Uni<Boolean> unassignEmployees(Long deptId) {
         return this.departmentService.getDepartment(deptId).flatMap(dept -> {
-            return this.employeeService.unassignEmployees(deptId).flatMap(result -> {
-                return Uni.createFrom().item(result);
+            return this.employeeService.getEmployeesByDept(dept.id).flatMap(employees ->{
+                if (employees.size() > 0){
+                    return this.employeeService.unassignEmployees(deptId).flatMap(result -> {
+                        if (result.getStatus() == 200) {
+                            return Uni.createFrom().item(true);
+                        } else {
+                            return Uni.createFrom().item(false);
+                        }
+                    });
+                } else {
+                    return Uni.createFrom().item(false);
+                }
             });
         });
     }

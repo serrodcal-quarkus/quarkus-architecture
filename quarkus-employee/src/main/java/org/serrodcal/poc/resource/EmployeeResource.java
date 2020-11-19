@@ -260,7 +260,7 @@ public class EmployeeResource {
         });
     }
 
-    @Route(path = "employee/department/:id/unassign", methods = HttpMethod.POST)
+    @Route(path = "employee/department/:deptId/unassign", methods = HttpMethod.POST)
     @APIResponse(responseCode="200",
             description="Employees unassigned",
             content=@Content(mediaType="text/plain", schema=@Schema(type=SchemaType.STRING)))

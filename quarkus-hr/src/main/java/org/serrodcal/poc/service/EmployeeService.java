@@ -7,6 +7,8 @@ import org.serrodcal.poc.domain.Employee;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.Set;
 
 @Path("/employee")
 @RegisterRestClient(configKey="employee-api")
@@ -14,7 +16,7 @@ public interface EmployeeService {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Multi<Employee> getEmployees();
+    public Uni<Set<Employee>> getEmployees();
 
     @GET
     @Path("/{id}")
@@ -24,15 +26,15 @@ public interface EmployeeService {
     @GET
     @Path("/department/{deptId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Multi<Employee> getEmployeesByDept(@PathParam("deptId") Long deptId);
+    public Uni<Set<Employee>> getEmployeesByDept(@PathParam("deptId") Long deptId);
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
-    public Uni<Boolean> updateEmployee(Employee employee);
+    public Uni<Response> updateEmployee(Employee employee);
 
     @POST
+    @Path("department/{deptId}/unassign")
     @Produces(MediaType.TEXT_PLAIN)
-    public Uni<Boolean> unassignEmployees(Long deptId);
+    public Uni<Response> unassignEmployees(@PathParam("deptId") Long deptId);
 
 }
