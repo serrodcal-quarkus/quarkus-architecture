@@ -118,6 +118,7 @@ public class HRResource {
     @Timed(name = "checksDeleteDepartment", description = "A measure of how much time takes to delete a department and also unassign all the employees who belong to it", unit = MetricUnits.MILLISECONDS)
     @org.eclipse.microprofile.opentracing.Traced
     void unassignEmployees(RoutingContext rc, @Param("deptId") String deptId) {
+        logger.info("unassignEmployees wit [deptId:" + deptId + "]");
         this.hrService.unassignEmployees(Long.valueOf(deptId)).subscribe().with(result -> {
             if (result) {
                 rc.response()
